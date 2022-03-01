@@ -1,40 +1,40 @@
-version: "3.8"
+version: '3.8'
 
 services:
-    db:
-        image: postgres
-        ports:
-            - "5432:5432"
-        environment:
-            - POSTGRES_DB=DentalApplication
-            - POSTGRES_USER=postgres
-            - POSTGRES_PASSWORD=postgres
-        container_name: dentalapppostgresql
+  db:
+    image: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_DB=DentalApplicationReact
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    container_name: dentalapppreactostgresql
 
-    backend:
-        build:
-            context: .
-            dockerfile: docker/Python/Dockerfile
-        command: ./docker/Python/Backend_setup.sh
-        volumes:
-            - .:/dentalapp
-        ports:
-            - "8000:8000"
-        depends_on:
-            - db
-        container_name: dentalappbackend
-        links:
-            - "db:dentalapppostgresql"
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Python/Dockerfile
+    command: ./docker/Python/Backend_setup.sh
+    volumes:
+      - .:/dentalapp
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+    container_name: dentalappreactbackend
+    links:
+      - 'db:dentalappreactpostgresql'
 
-    frontend:
-        build:
-            context: .
-            dockerfile: docker/Vue/Dockerfile
-        command: ./docker/Vue/Frontend_setup.sh
-        volumes:
-            - .:/dentalapp/src/app
-        ports:
-            - "8080:8080"
-        depends_on:
-            - backend
-        container_name: dentalappfrontend
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Vue/Dockerfile
+    command: ./docker/React/Frontend_setup.sh
+    volumes:
+      - .:/dentalapp/src/app
+    ports:
+      - '8080:8080'
+    depends_on:
+      - backend
+    container_name: dentalappreactfrontend

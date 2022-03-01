@@ -122,10 +122,10 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'DentalApplication',
+        'NAME': 'DentalApplicationReact',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'dentalapppostgresql',
+        'HOST': 'dentalappreactpostgresql',
         'PORT': '5432',
     }
 }
