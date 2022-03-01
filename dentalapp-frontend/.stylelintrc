@@ -1,0 +1,14 @@
+{
+  "processors": ["stylelint-processor-styled-components"],
+  "extends": ["stylelint-config-standard", "stylelint-config-styled-components"],
+  "customSyntax": "postcss-scss",
+  "rules": {
+    "property-no-vendor-prefix": null,
+    "string-quotes": null,
+    "value-keyword-case": ["lower", { "ignoreKeywords": ["dummyValue"] }],
+    "value-no-vendor-prefix": null,
+    "declaration-colon-newline-after": null,
+    "color-function-notation": null,
+    "alpha-value-notation": null
+  }
+}
