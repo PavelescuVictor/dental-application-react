@@ -6,12 +6,16 @@ const StyledScrollTop = styled.div`
       theme: { palette },
     } = props;
     return css`
+      position: fixed;
+      width: 50px;
+      height: 50px;
+      right: 20px;
+      bottom: 20px;
+      z-index: 10;
+
       .scroll-top-button {
-        position: fixed;
-        width: 50px;
-        height: 50px;
-        right: 16px;
-        bottom: 16px;
+        width: 100%;
+        height: 100%;
         background: ${palette.basic.white};
         display: flex;
         justify-content: center;

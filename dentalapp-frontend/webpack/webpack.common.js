@@ -51,7 +51,8 @@ module.exports = {
         },
       },
       {
-        test: /\.(jpe?g|png|gif|svg)$/,
+        // test: /\.(jpe?g|png|gif|svg)$/,
+        test: /\.(jpe?g|png|gif)$/,
         use: [
           {
             loader: 'file-loader',
@@ -62,6 +63,15 @@ module.exports = {
             },
           },
         ],
+      },
+      // {
+      //   type: 'asset',
+      //   resourceQuery: /url/, // *.svg?url
+      // },
+      {
+        test: /\.svg$/i,
+        issuer: /\.[jt]sx?$/,
+        use: ['@svgr/webpack'],
       },
     ],
   },

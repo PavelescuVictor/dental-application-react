@@ -7,18 +7,7 @@ const StyledButton = styled.button<BaseButtonProps>`
       theme: { palette },
     } = props;
 
-    return css`
-      margin: 0rem 29px;
-      path {
-        fill: ${palette.basic.white};
-      }
-
-      &:hover {
-        path {
-          fill: ${palette.primary};
-        }
-      }
-    `;
+    return css``;
   }}
 `;
 

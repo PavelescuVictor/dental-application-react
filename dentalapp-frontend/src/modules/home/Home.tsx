@@ -1,18 +1,9 @@
-import { Menu, Navbar, Banner, ScrollTop } from 'components';
+import { Banner } from 'components';
 import StyledHome from './Home.style';
 
-const CURRENT_PAGE = 'HOME';
-
-const Home = (): JSX.Element => {
-  console.log('Home');
-  return (
-    <StyledHome>
-      {/* <Navbar currentPage={CURRENT_PAGE} /> */}
-      {/* <Banner /> */}
-      <ScrollTop />
-      {/* <Footer /> */}
-    </StyledHome>
-  );
-};
-
+const Home = (): JSX.Element => (
+  <StyledHome>
+    <Banner />
+  </StyledHome>
+);
 export default Home;

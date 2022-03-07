@@ -1,10 +1,15 @@
 import { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
-// import ExampleLazyLoad from 'modules/exampleLazyLoad';
-import Home from './modules/home';
+import { Navbar, SplashScreen, ScrollTop, Footer } from 'components';
 
-// const Home = lazy(() => import('./modules/home'));
-// const Program = lazy(() => import('./modules/program'));
+// const Home = lazy(() =>
+//   Promise.all([import('./modules/home'), new Promise((resolve) => setTimeout(resolve, 1800))]).then(
+//     ([moduleExports]) => moduleExports
+//   )
+// );
+
+const Home = lazy(() => import('./modules/home'));
+const Login = lazy(() => import('./modules/login'));
 
 function App() {
   window.onunload = () => {
@@ -12,13 +17,16 @@ function App() {
   };
 
   return (
-    // <Suspense fallback={<SplashScreen />}>
-    //   <Menu />
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/home" element={<Home />} />
-    </Routes>
-    // </Suspense>
+    <Suspense fallback={<SplashScreen />}>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+      <ScrollTop />
+      <Footer />
+    </Suspense>
   );
 }
 
