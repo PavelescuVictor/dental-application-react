@@ -1,5 +1,6 @@
 import { RootState } from 'store/store';
-import { UserManagerState, USER_MANAGER_KEY } from './userManager';
+import { UserManagerState } from './models';
+import { USER_MANAGER_KEY } from './constants';
 
 export const selectUser = (state: UserManagerState) => state.user;
 export const selectUserToken = (state: UserManagerState) => state.userToken;
