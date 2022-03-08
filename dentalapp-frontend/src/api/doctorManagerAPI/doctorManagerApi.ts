@@ -1,6 +1,10 @@
 import axios from 'axios';
+import {
+  AddDoctorPayload,
+  RemoveDoctorPayload,
+  EditDoctorPayload,
+} from 'store/slices/doctorManagerSlice/models';
 import { DOCTOR_URL } from './constants';
-import {} from 'store/slices/doctorManagerSlice/models';
 
 export const requestDoctorList = async (userToken: string) =>
   axios({
@@ -19,8 +23,8 @@ export const addDoctor = async (userToken: string, payload: AddDoctorPayload, us
       Authorization: `Token ${userToken}`,
     },
     data: {
-      firstName: payload.doctorFirstName,
-      lastName: payload.doctorLastName,
+      firstName: payload.firstName,
+      lastName: payload.lastName,
       cabinet: payload.cabinet,
       phone: payload.phone,
       createdBy: userId,
@@ -30,7 +34,7 @@ export const addDoctor = async (userToken: string, payload: AddDoctorPayload, us
 
 export const removeDoctor = async (userToken: string, payload: RemoveDoctorPayload) =>
   axios({
-    url: `${DOCTOR_URL}${payload.doctorId}/`,
+    url: `${DOCTOR_URL}${payload.id}/`,
     method: 'DELETE',
     headers: {
       Authorization: `Token ${userToken}`,
@@ -39,14 +43,14 @@ export const removeDoctor = async (userToken: string, payload: RemoveDoctorPaylo
 
 export const editDoctor = async (userToken: string, payload: EditDoctorPayload, userId: string) =>
   axios({
-    url: `${DOCTOR_URL}${payload.doctorId}/`,
+    url: `${DOCTOR_URL}${payload.id}/`,
     method: 'PATCH',
     headers: {
       Authorization: `Token ${userToken}`,
     },
     data: {
-      firstName: payload.doctorFirstName,
-      lastName: payload.doctorLastName,
+      firstName: payload.firstName,
+      lastName: payload.lastName,
       cabinet: payload.cabinet,
       phone: payload.phone,
       updatedBy: userId,

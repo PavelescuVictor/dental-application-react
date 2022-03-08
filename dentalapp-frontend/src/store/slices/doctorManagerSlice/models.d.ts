@@ -2,25 +2,18 @@ export type AddDoctorPayload = {
   firstName: string;
   lastName: string;
   cabinet: string;
+  phone: string;
 };
 
 export type EditDoctorPayload = {
   id: string;
-  firstName: string;
-  lastName: string;
-  cabinet: string;
+  firstName?: string;
+  lastName?: string;
+  cabinet?: string;
+  phone?: string;
 };
 
 export type RemoveDoctorPayload = { id: string };
-
-export type UserEditPayload = {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  updatedBy: string;
-};
-
-export type RenewTokenPayload = { id: string };
 
 export interface Doctor {
   id: string;
