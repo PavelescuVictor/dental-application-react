@@ -21,10 +21,10 @@ jobs:
 
       - name: Clean install dependencies
         working-directory: ./dentalapp-frontend
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Run deploy script
         working-directory: ./dentalapp-frontend
         run: |
           git config user.name "PavelescuVictor" && git config user.email "pavelescu.victor97@gmail.com"
-          npm run gh-pages-deploy
+          yarn run gh-pages-deploy
