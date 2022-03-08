@@ -3,7 +3,13 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from 'store/rootReducer';
 import { doctorManagerAPI } from 'api';
 import { initialStateDoctorManager, DOCTOR_MANAGER_KEY } from './constants';
-import { DoctorManagerState, Doctor } from './models';
+import {
+  DoctorManagerState,
+  Doctor,
+  AddDoctorPayload,
+  EditDoctorPayload,
+  RemoveDoctorPayload,
+} from './models';
 
 const requestDoctorList = createAsyncThunk(
   'doctorManager/requestDoctorList',
@@ -69,7 +75,7 @@ const removeDoctor = createAsyncThunk(
       const { userToken } = (thunkAPI.getState() as RootState).userManager;
       const response = doctorManagerAPI.removeDoctor(userToken, removeDoctorPayload);
       return response;
-    } catch {
+    } catch (error) {
       console.log('Remove Doctor Error:');
       return thunkAPI.rejectWithValue(error);
     }
@@ -136,23 +142,68 @@ export const doctorManagerSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Request Doctor List
+    builder.addCase(requestDoctorList.pending, (state: DoctorManagerState) => {
+      state.isLoadingDoctors = true;
+    });
+
     builder.addCase(
-      requestDoctorList.pending,
-      (state: DoctorManagerState, { payload }: ActionPayload<Doctor[]>) => {
-        state.isLoadingDoctors = true;
+      requestDoctorList.fulfilled,
+      (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
+        state.doctorList = payload.data.results;
       }
     );
 
-    builder.addCase(login.fulfilled, (state: UserManagerState, { payload }: PayloadAction<any>) => {
-      const { user, userToken, userTokenExpiry } = payload;
-      state.user = user;
-      state.userToken = userToken;
-      state.userTokenExpiry = userTokenExpiry;
+    builder.addCase(
+      requestDoctorList.rejected,
+      (state: DoctorManagerState, action: PayloadAction<any>) => {
+        state.hasErrorLoadingDoctors = true;
+      }
+    );
+
+    // Add Doctor
+    builder.addCase(
+      addDoctor.fulfilled,
+      (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
+        state.doctorList.push(payload.data.results);
+      }
+    );
+
+    builder.addCase(addDoctor.rejected, (state: DoctorManagerState, action: PayloadAction<any>) => {
+      state.hasErrorAddingDoctor = true;
     });
 
-    builder.addCase(login.rejected, (state: UserManagerState) => {
-      state.hasErrorLoggingIn = true;
-    });
+    // Edit Doctor
+    builder.addCase(
+      editDoctor.fulfilled,
+      (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
+        state.doctorList.filter((doctor) => {
+          if (doctor.id === payload.id) return editDoctor;
+          return doctor;
+        });
+      }
+    );
+
+    builder.addCase(
+      editDoctor.rejected,
+      (state: DoctorManagerState, action: PayloadAction<any>) => {
+        state.hasErrorEditingDoctor = true;
+      }
+    );
+
+    // Remove Doctor
+    builder.addCase(
+      requestDoctorList.fulfilled,
+      (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
+        state.doctorList = state.doctorList.filter((doctor) => doctor.id !== payload.doctorId);
+      }
+    );
+
+    builder.addCase(
+      requestDoctorList.rejected,
+      (state: DoctorManagerState, action: PayloadAction<any>) => {
+        state.hasErrorRemovingDoctor = true;
+      }
+    );
   },
 });
 
