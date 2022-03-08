@@ -26,34 +26,6 @@ const requestDoctorList = createAsyncThunk(
   }
 );
 
-// filterDoctorList({ commit, getters }, query) {
-//     commit("filteredDoctorList_empty");
-//     const filteredDoctorList = [];
-//     getters.doctorList.forEach((item) => {
-//         if (
-//             (query.filteredInputFirstName === "") &
-//             item.lastName.includes(query.filteredInputLastName)
-//         )
-//             filteredDoctorList.push(item);
-//         else if (
-//             (query.filteredInputLastName === "") &
-//             item.firstName.includes(query.filteredInputFirstName)
-//         )
-//             filteredDoctorList.push(item);
-//         else if (
-//             (query.filteredInputFirstName != "") &
-//             (query.filteredInputLastName != "")
-//         ) {
-//             if (
-//                 item.firstName.includes(query.filteredInputFirstName) &
-//                 item.lastName.includes(query.filteredInputLastName)
-//             )
-//                 filteredDoctorList.push(item);
-//         }
-//     });
-//     commit("filteredDoctorList_success", filteredDoctorList);
-// },
-
 const addDoctor = createAsyncThunk(
   'doctorManager/addDoctor',
   async (addDoctorPayload: AddDoctorPayload, thunkAPI) => {
@@ -113,7 +85,7 @@ export const doctorManagerSlice = createSlice({
     },
 
     editDoctor(state: DoctorManagerState, action: PayloadAction<Doctor>) {
-      state.doctorList = state.doctorList.filter((doctor) =>
+      state.doctorList = state.doctorList.filter((doctor: Doctor) =>
         doctor.id === action.payload.id ? action.payload : doctor
       );
     },
@@ -176,10 +148,7 @@ export const doctorManagerSlice = createSlice({
     builder.addCase(
       editDoctor.fulfilled,
       (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
-        state.doctorList.filter((doctor) => {
-          if (doctor.id === payload.id) return editDoctor;
-          return doctor;
-        });
+        state.doctorList.filter((doctor: Doctor) => (doctor.id === payload.id ? payload : doctor));
       }
     );
 
@@ -194,7 +163,9 @@ export const doctorManagerSlice = createSlice({
     builder.addCase(
       requestDoctorList.fulfilled,
       (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
-        state.doctorList = state.doctorList.filter((doctor) => doctor.id !== payload.doctorId);
+        state.doctorList = state.doctorList.filter(
+          (doctor: Doctor) => doctor.id !== payload.doctorId
+        );
       }
     );
 
