@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from 'store/rootReducer';
+import { userManagerAPI } from 'api';
 import {
   LoginPayload,
   RegisterPayload,
@@ -10,7 +12,6 @@ import {
   AuthStatus,
 } from './models';
 import { initialStateUserManager, USER_MANAGER_KEY } from './constants';
-import { userManagerAPI } from 'api';
 
 // export const userMangerMiddleware = (store) => (next) => (action) => {
 //   if (userManagerSlice.actions.resetUserData.match(action)) {
@@ -77,13 +78,12 @@ const requestProfile = createAsyncThunk('userManager/requestProfile', async (_, 
     const { user, userToken } = (thunkAPI.getState() as RootState).userManager;
     const response = await userManagerAPI.userRequestProfile(user, userToken);
     const userProfile = response.data;
-    if (typeof userProfile != 'object') {
+    if (typeof userProfile !== 'object') {
       localStorage.removeItem('userProfile');
       return initialStateUserManager.userProfile;
-    } else {
-      localStorage.setItem('userProfile', userProfile);
-      return userProfile;
     }
+    localStorage.setItem('userProfile', userProfile);
+    return userProfile;
   } catch (error) {
     localStorage.removeItem('userProfile');
 
@@ -130,10 +130,9 @@ const editProfile = createAsyncThunk(
       if (typeof userProfile != 'object') {
         localStorage.removeItem('userProfile');
         return initialStateUserManager.userProfile;
-      } else {
-        localStorage.setItem('userProfile', userProfile);
-        return userProfile;
       }
+      localStorage.setItem('userProfile', userProfile);
+      return userProfile;
     } catch (error) {
       console.log('Edit Profile Error:', error);
       return thunkAPI.rejectWithValue(error);
@@ -213,90 +212,104 @@ export const userManagerSlice = createSlice({
     // Login
     builder.addCase(login.pending, (state: UserManagerState) => {
       state.hasErrorLoggingIn = false;
-    }),
-      builder.addCase(
-        login.fulfilled,
-        (state: UserManagerState, { payload }: PayloadAction<any>) => {
-          const { user, userToken, userTokenExpiry } = payload;
-          state.user = user;
-          state.userToken = userToken;
-          state.userTokenExpiry = userTokenExpiry;
-        }
-      ),
-      builder.addCase(login.rejected, (state: UserManagerState) => {
-        state.hasErrorLoggingIn = true;
-      }),
-      // Register
-      builder.addCase(register.pending, (state: UserManagerState) => {
-        state.hasErrorRegistering = false;
-      }),
-      builder.addCase(
-        register.fulfilled,
-        (state: UserManagerState, { payload }: PayloadAction<any>) => {
-          const { user, userToken, userTokenExpiry } = payload;
-          state.user = user;
-          state.userToken = userToken;
-          state.userTokenExpiry = userTokenExpiry;
-        }
-      ),
-      builder.addCase(register.rejected, (state: UserManagerState) => {
-        state.hasErrorRegistering = true;
-      }),
-      // Request Profiles
-      builder.addCase(requestProfile.pending, (state: UserManagerState) => {
-        state.hasErrorRequestingProfile = false;
-      }),
-      builder.addCase(
-        requestProfile.fulfilled,
-        (state: UserManagerState, { payload }: PayloadAction<any>) => {
-          state.userProfile = payload;
-        }
-      ),
-      builder.addCase(requestProfile.rejected, (state: UserManagerState) => {
-        state.hasErrorRequestingProfile = true;
-      }),
-      // Add Profile
-      builder.addCase(addProfile.pending, (state: UserManagerState) => {
-        state.hasErrorAddingProfile = false;
-      }),
-      builder.addCase(
-        addProfile.fulfilled,
-        (state: UserManagerState, { payload }: PayloadAction<any>) => {
-          state.userProfile = payload;
-        }
-      ),
-      builder.addCase(addProfile.rejected, (state: UserManagerState) => {
-        state.hasErrorAddingProfile = true;
-      }),
-      // Edit Profile
-      builder.addCase(editProfile.pending, (state: UserManagerState) => {
-        state.hasErrorEditingProfile = false;
-      }),
-      builder.addCase(
-        editProfile.fulfilled,
-        (state: UserManagerState, { payload }: PayloadAction<any>) => {
-          state.userProfile = payload;
-        }
-      ),
-      builder.addCase(editProfile.rejected, (state: UserManagerState) => {
-        state.hasErrorEditingProfile = true;
-      }),
-      // Renew Token
-      builder.addCase(renewToken.pending, (state: UserManagerState) => {
-        state.hasErrorRenewingToken = false;
-      }),
-      builder.addCase(
-        renewToken.fulfilled,
-        (state: UserManagerState, { payload }: PayloadAction<any>) => {
-          const { user, userToken, userTokenExpiry } = payload;
-          state.user = user;
-          state.userToken = userToken;
-          state.userTokenExpiry = userTokenExpiry;
-        }
-      ),
-      builder.addCase(renewToken.rejected, (state: UserManagerState) => {
-        state.hasErrorRenewingToken = true;
-      });
+    });
+
+    builder.addCase(login.fulfilled, (state: UserManagerState, { payload }: PayloadAction<any>) => {
+      const { user, userToken, userTokenExpiry } = payload;
+      state.user = user;
+      state.userToken = userToken;
+      state.userTokenExpiry = userTokenExpiry;
+    });
+
+    builder.addCase(login.rejected, (state: UserManagerState) => {
+      state.hasErrorLoggingIn = true;
+    });
+
+    // Register
+    builder.addCase(register.pending, (state: UserManagerState) => {
+      state.hasErrorRegistering = false;
+    });
+
+    builder.addCase(
+      register.fulfilled,
+      (state: UserManagerState, { payload }: PayloadAction<any>) => {
+        const { user, userToken, userTokenExpiry } = payload;
+        state.user = user;
+        state.userToken = userToken;
+        state.userTokenExpiry = userTokenExpiry;
+      }
+    );
+
+    builder.addCase(register.rejected, (state: UserManagerState) => {
+      state.hasErrorRegistering = true;
+    });
+
+    // Request Profiles
+    builder.addCase(requestProfile.pending, (state: UserManagerState) => {
+      state.hasErrorRequestingProfile = false;
+    });
+
+    builder.addCase(
+      requestProfile.fulfilled,
+      (state: UserManagerState, { payload }: PayloadAction<any>) => {
+        state.userProfile = payload;
+      }
+    );
+
+    builder.addCase(requestProfile.rejected, (state: UserManagerState) => {
+      state.hasErrorRequestingProfile = true;
+    });
+
+    // Add Profile
+    builder.addCase(addProfile.pending, (state: UserManagerState) => {
+      state.hasErrorAddingProfile = false;
+    });
+
+    builder.addCase(
+      addProfile.fulfilled,
+      (state: UserManagerState, { payload }: PayloadAction<any>) => {
+        state.userProfile = payload;
+      }
+    );
+
+    builder.addCase(addProfile.rejected, (state: UserManagerState) => {
+      state.hasErrorAddingProfile = true;
+    });
+
+    // Edit Profile
+    builder.addCase(editProfile.pending, (state: UserManagerState) => {
+      state.hasErrorEditingProfile = false;
+    });
+
+    builder.addCase(
+      editProfile.fulfilled,
+      (state: UserManagerState, { payload }: PayloadAction<any>) => {
+        state.userProfile = payload;
+      }
+    );
+
+    builder.addCase(editProfile.rejected, (state: UserManagerState) => {
+      state.hasErrorEditingProfile = true;
+    });
+
+    // Renew Token
+    builder.addCase(renewToken.pending, (state: UserManagerState) => {
+      state.hasErrorRenewingToken = false;
+    });
+
+    builder.addCase(
+      renewToken.fulfilled,
+      (state: UserManagerState, { payload }: PayloadAction<any>) => {
+        const { user, userToken, userTokenExpiry } = payload;
+        state.user = user;
+        state.userToken = userToken;
+        state.userTokenExpiry = userTokenExpiry;
+      }
+    );
+
+    builder.addCase(renewToken.rejected, (state: UserManagerState) => {
+      state.hasErrorRenewingToken = true;
+    });
   },
 });
 

@@ -7,7 +7,7 @@ import {
   userRequestProfile,
 } from './userManagerApi';
 
-const userManager = {
+const userManagerAPI = {
   userAddProfile,
   userEditProfile,
   userLogin,
@@ -16,4 +16,4 @@ const userManager = {
   userRequestProfile,
 };
 
-export default userManager;
+export default userManagerAPI;

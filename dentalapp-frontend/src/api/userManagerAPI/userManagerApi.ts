@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { REGISTER_URL, LOGIN_URL, PROFILE_URL, RENEW_TOKEN_URL } from './constants';
 import {
   RegisterPayload,
   LoginPayload,
@@ -7,6 +6,7 @@ import {
   UserEditPayload,
   RenewTokenPayload,
 } from 'store/slices/userManagerSlice/models';
+import { REGISTER_URL, LOGIN_URL, PROFILE_URL, RENEW_TOKEN_URL } from './constants';
 
 export const userRegister = async (registerPayload: RegisterPayload) =>
   axios({

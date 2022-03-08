@@ -19,7 +19,8 @@ module.exports = {
   ],
   plugins: ['react-hooks', 'prettier', 'import'],
   parserOptions: {
-    project: './dentalapp-frontend/tsconfig.json',
+    tsconfigRootDir: __dirname,
+    // project: './dentalapp-frontend/tsconfig.json',
   },
   env: {
     browser: true,
