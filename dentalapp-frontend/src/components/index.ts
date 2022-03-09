@@ -7,3 +7,4 @@ export { default as Banner } from './banner';
 export { default as Image } from './image';
 export { default as SplashScreen } from './splashScreen';
 export { default as Logo } from './logo';
+export { default as Link } from './link';

@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-const StyledLogin = styled.div`
+const StyledLoginPage = styled.div`
   ${(props) => {
     const {
       theme: { palette },
@@ -121,6 +121,6 @@ const StyledLogin = styled.div`
   }}
 `;
 
-StyledLogin.displayName = 'StyledLogin';
+StyledLoginPage.displayName = 'StyledLoginPage';
 
-export default StyledLogin;
+export default StyledLoginPage;

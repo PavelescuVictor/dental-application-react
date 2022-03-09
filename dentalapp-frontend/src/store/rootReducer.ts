@@ -13,7 +13,7 @@ const rootReducer = combineReducers({
   themeManager: themeManagerReducer,
   dialogManager: dialogManagerReducer,
   doctorManager: doctorManagerReducer,
-  patientManageR: patientManagerReducer,
+  patientManager: patientManagerReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

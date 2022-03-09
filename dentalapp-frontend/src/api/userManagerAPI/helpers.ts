@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import { VALID_TOKEN_THRESHOLD } from './constants';
 
 export const isTokenValid = (userTokenExpiry: string) => {

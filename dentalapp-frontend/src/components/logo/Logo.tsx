@@ -4,11 +4,13 @@ import { LogoProps } from './models';
 
 const { Logo: LogoSvg } = svgAssets;
 
-const Logo = ({ hasAnimation }: LogoProps): JSX.Element => (
-  <StyledLogo hasAnimation={hasAnimation}>
-    <div className="main-logo">
-      <LogoSvg />
-    </div>
-  </StyledLogo>
-);
+const Logo = ({ hasAnimation }: LogoProps): JSX.Element => {
+  return (
+    <StyledLogo hasAnimation={hasAnimation}>
+      <div className="main-logo">
+        <LogoSvg />
+      </div>
+    </StyledLogo>
+  );
+};
 export default Logo;

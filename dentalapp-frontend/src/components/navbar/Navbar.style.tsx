@@ -11,7 +11,7 @@ const StyledNavbar = styled.div`
       position: fixed;
       top: 0px;
       left: 0px;
-      z-index: 10;
+      z-index: 100;
 
       .navbar__content {
         height: 100%;

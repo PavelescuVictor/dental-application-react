@@ -9,7 +9,7 @@ import { Navbar, SplashScreen, ScrollTop, Footer } from 'components';
 // );
 
 const Home = lazy(() => import('./modules/home'));
-const Login = lazy(() => import('./modules/login'));
+const LoginPage = lazy(() => import('./modules/login'));
 
 function App() {
   window.onunload = () => {
@@ -22,7 +22,13 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="doctors" element={<></>} />
+        <Route path="/patients" element={<></>} />
+        <Route path="/orders" element={<></>} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/logout" element={<></>} />
+        <Route path="/admin-page" element={<></>} />
+        <Route path="/profile" element={<></>} />
       </Routes>
       <ScrollTop />
       <Footer />

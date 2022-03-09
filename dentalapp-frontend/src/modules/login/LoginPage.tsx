@@ -1,8 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import svgAssets from 'assets/images';
 import { FormControl, TextField } from '@mui/material';
-import StyledLogin from './Login.style';
-import { common } from '@mui/material/colors';
+import StyledLoginPage from './LoginPage.style';
 
 const { Background } = svgAssets;
 
@@ -16,7 +15,7 @@ const defaultFormValues: FormValues = {
   password: '',
 };
 
-const Login = (): JSX.Element => {
+const LoginPage = (): JSX.Element => {
   const [isValid, setIsValid] = useState<boolean>(true);
   const [formValues, setFormValues] = useState<FormValues>(defaultFormValues);
 
@@ -66,7 +65,7 @@ const Login = (): JSX.Element => {
   };
 
   return (
-    <StyledLogin>
+    <StyledLoginPage>
       <div className="login__content">
         <div className="content__banner">
           <div className="banner__overlay">
@@ -109,7 +108,7 @@ const Login = (): JSX.Element => {
           </div>
         </div>
       </div>
-    </StyledLogin>
+    </StyledLoginPage>
   );
 };
-export default Login;
+export default LoginPage;

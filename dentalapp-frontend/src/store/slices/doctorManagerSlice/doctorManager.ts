@@ -161,7 +161,7 @@ export const doctorManagerSlice = createSlice({
 
     // Remove Doctor
     builder.addCase(
-      requestDoctorList.fulfilled,
+      removeDoctor.fulfilled,
       (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
         state.doctorList = state.doctorList.filter(
           (doctor: Doctor) => doctor.id !== payload.doctorId
@@ -170,7 +170,7 @@ export const doctorManagerSlice = createSlice({
     );
 
     builder.addCase(
-      requestDoctorList.rejected,
+      removeDoctor.rejected,
       (state: DoctorManagerState, action: PayloadAction<any>) => {
         state.hasErrorRemovingDoctor = true;
       }

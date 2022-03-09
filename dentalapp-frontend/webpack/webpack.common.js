@@ -32,12 +32,7 @@ module.exports = {
             : {
                 loader: MiniCssExtractPlugin.loader,
                 options: {
-                  publicPath: (resourcePath, context) => {
-                    const relPath =
-                      path.relative(path.dirname(resourcePath), path.join(context, baseUrl)) +
-                      path.sep;
-                    return slash(relPath);
-                  },
+                  publicPath: '../../',
                 },
               },
           'css-loader',
