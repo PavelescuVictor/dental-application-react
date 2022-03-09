@@ -1,7 +1,6 @@
-import { Menu } from 'components';
-import StyledNavbar from './Navbar.style';
-import { Link } from 'components';
 import { useNavigate } from 'react-router';
+import { Menu, Link } from 'components';
+import StyledNavbar from './Navbar.style';
 
 const LOGO_TITLE = 'eviDent';
 
