@@ -1,12 +1,11 @@
 import { Routes, Route } from 'react-router-dom';
-import React, { Fragment, lazy, ReactNode, ReactElement } from 'react';
+import React, { Fragment, lazy } from 'react';
 import {
   routePaths,
   RouteTypes,
   AllAccessRoutesTypes,
   OnlyAdminRoutesTypes,
   OnlyAuthenticatedRoutesTypes,
-  RoutePaths,
 } from './models';
 
 export const renderRoutes = (routesList: RouteItemType[] = []) => (
@@ -38,6 +37,12 @@ interface RouteItemType {
 type RoutesList = RouteItemType[];
 
 const allAccessRoutes: RouteItemType[] = [
+  {
+    exact: true,
+    path: routePaths.DEFAULT,
+    routeType: AllAccessRoutesTypes.HOME,
+    component: lazy(() => import('modules/home')),
+  },
   {
     exact: true,
     path: routePaths.HOME,

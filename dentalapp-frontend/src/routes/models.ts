@@ -1,8 +1,7 @@
-import { ReactElement, ReactNode } from 'react';
-
 // All Access
 
 export enum AllAccessRoutesTypes {
+  DEFAULT = 'DEFAULT',
   HOME = 'HOME',
   LOGIN = 'LOGIN',
   NOT_FOUND_PAGE = 'NOT_FOUND_PAGE',
@@ -13,6 +12,7 @@ export type AllAccessRoutePaths = {
 };
 
 export const allAccessRoutePaths: AllAccessRoutePaths = {
+  [AllAccessRoutesTypes.DEFAULT]: '/',
   [AllAccessRoutesTypes.HOME]: '/home',
   [AllAccessRoutesTypes.LOGIN]: '/login',
   [AllAccessRoutesTypes.NOT_FOUND_PAGE]: '*',
@@ -70,6 +70,7 @@ export enum RouteAccessTypes {
 }
 
 export const RouteAccesLevels = {
+  [AllAccessRoutesTypes.DEFAULT]: RouteAccessTypes.ALL_ACCESS,
   [AllAccessRoutesTypes.HOME]: RouteAccessTypes.ALL_ACCESS,
   [AllAccessRoutesTypes.LOGIN]: RouteAccessTypes.ALL_ACCESS,
   [AllAccessRoutesTypes.NOT_FOUND_PAGE]: RouteAccessTypes.ALL_ACCESS,
