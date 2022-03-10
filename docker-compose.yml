@@ -9,7 +9,7 @@ services:
       - POSTGRES_DB=DentalApplicationReact
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    container_name: dentalapppreactostgresql
+    container_name: dentalappreactpostgresql
 
   backend:
     build:
