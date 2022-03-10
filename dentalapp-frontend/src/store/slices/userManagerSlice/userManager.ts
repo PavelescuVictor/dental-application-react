@@ -13,6 +13,8 @@ import {
 } from './models';
 import { initialStateUserManager, USER_MANAGER_KEY } from './constants';
 
+import { transformLoginResponsePayload } from './helpers';
+
 // export const userMangerMiddleware = (store) => (next) => (action) => {
 //   if (userManagerSlice.actions.resetUserData.match(action)) {
 //     localStorage.removeItem('user');
@@ -33,8 +35,7 @@ const login = createAsyncThunk(
       localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('userToken', userToken);
       localStorage.setItem('userTokenExpiry', userTokenExpiry);
-
-      return response;
+      return transformLoginResponsePayload(response.data);
     } catch (error: any) {
       localStorage.removeItem('user');
       localStorage.removeItem('userToken');
@@ -105,10 +106,9 @@ const addProfile = createAsyncThunk(
       if (typeof userProfile != 'object') {
         localStorage.removeItem('userProfile');
         return initialStateUserManager.userProfile;
-      } else {
-        localStorage.setItem('userProfile', userProfile);
-        return userProfile;
       }
+      localStorage.setItem('userProfile', userProfile);
+      return userProfile;
     } catch (error: any) {
       localStorage.removeItem('userProfile');
 
@@ -216,6 +216,7 @@ export const userManagerSlice = createSlice({
 
     builder.addCase(login.fulfilled, (state: UserManagerState, { payload }: PayloadAction<any>) => {
       const { user, userToken, userTokenExpiry } = payload;
+      console.log({ user, userToken, userTokenExpiry });
       state.user = user;
       state.userToken = userToken;
       state.userTokenExpiry = userTokenExpiry;
@@ -317,4 +318,13 @@ export const userManagerReducer = userManagerSlice.reducer;
 
 export const userManagerActions = {
   ...userManagerSlice.actions,
+};
+
+export const userManagerAsyncThunks = {
+  login,
+  register,
+  requestProfile,
+  addProfile,
+  editProfile,
+  renewToken,
 };

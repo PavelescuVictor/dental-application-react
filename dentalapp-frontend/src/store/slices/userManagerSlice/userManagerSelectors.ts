@@ -6,7 +6,7 @@ export const selectUser = (state: UserManagerState) => state.user;
 export const selectUserToken = (state: UserManagerState) => state.userToken;
 export const selectUserTokenExpiry = (state: UserManagerState) => state.userTokenExpiry;
 export const selectUserId = (state: UserManagerState) => {
-  if (state.user !== '') {
+  if (state.user) {
     if (typeof state.user === 'object') return state.user.id;
 
     return JSON.parse(state.user).id;
@@ -16,10 +16,10 @@ export const selectUserId = (state: UserManagerState) => {
 export const selectUserProfile = (state: UserManagerState) => state.userProfile;
 export const selectIsLoggedIn = (state: UserManagerState) => !!state.userToken;
 export const selectIsAdmin = (state: UserManagerState) => {
-  if (state.user !== '') {
-    if (typeof state.user === 'object') return state.user.is_admin;
+  if (state.user) {
+    if (typeof state.user === 'object') return state.user.isAdmin;
 
-    return JSON.parse(state.user).is_admin;
+    return JSON.parse(state.user).isAdmin;
   }
   return false;
 };

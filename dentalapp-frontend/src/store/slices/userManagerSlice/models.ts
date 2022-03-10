@@ -13,12 +13,20 @@ export type UserEditPayload = {
 
 export type RenewTokenPayload = { id: string };
 
+export interface User {
+  id: string;
+  email: string;
+  isStaff: boolean;
+  isAdmin: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface UserManagerState {
   authStatus: AuthStatus;
-  isAdmin: boolean;
-  user: string;
-  userToken: string;
-  userTokenExpiry: string;
+  user: User | null;
+  userToken: string | null;
+  userTokenExpiry: string | null;
   userProfile: string;
   hasErrorLoggingIn: boolean;
   hasErrorRegistering: boolean;
