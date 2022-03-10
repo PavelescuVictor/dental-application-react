@@ -8,3 +8,5 @@ export { default as Image } from './image';
 export { default as SplashScreen } from './splashScreen';
 export { default as Logo } from './logo';
 export { default as Link } from './link';
+export { default as Page } from './page';
+export { default as ProtectedRoute } from './protectedRoute';
