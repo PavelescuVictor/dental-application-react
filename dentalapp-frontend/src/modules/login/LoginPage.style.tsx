@@ -15,8 +15,6 @@ const StyledLoginPage = styled.div`
       .login__content {
         height: 100vh;
         width: 100%;
-        display: grid;
-        grid-template-columns: auto minmax(400px, 50%);
       }
 
       .content__form {
