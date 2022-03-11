@@ -7,7 +7,8 @@ import { useAppDispatch } from 'store/store';
 import { userManagerAsyncThunks } from 'store/slices/userManagerSlice/userManager';
 import useUnwrapAsyncThunk from 'hooks/useUnwrapAsyncThunk';
 import { useNavigate } from 'react-router';
-import { routePaths } from 'routes/models';
+import { withAccessControl } from 'hocs';
+import { routePaths, RouteAccessTypes } from 'routes/models';
 import StyledLoginPage from './LoginPage.style';
 
 const { Background } = svgAssets;
@@ -114,4 +115,4 @@ const LoginPage = (): JSX.Element => {
     </StyledLoginPage>
   );
 };
-export default LoginPage;
+export default withAccessControl(LoginPage, RouteAccessTypes.ALL_ACCESS);
