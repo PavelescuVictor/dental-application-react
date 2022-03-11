@@ -6,6 +6,7 @@ import { themeManagerReducer } from './slices/themeManagerSlice/themeManager';
 import { dialogManagerReducer } from './slices/dialogManagerSlice/dialogManager';
 import { doctorManagerReducer } from './slices/doctorManagerSlice/doctorManager';
 import { patientManagerReducer } from './slices/patientManagerSlice/patientManager';
+import { alertManagerReducer } from './slices/alertManagerSlice/alertManager';
 
 const rootReducer = combineReducers({
   example: exampleReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   dialogManager: dialogManagerReducer,
   doctorManager: doctorManagerReducer,
   patientManager: patientManagerReducer,
+  alertManager: alertManagerReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
