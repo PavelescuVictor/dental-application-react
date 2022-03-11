@@ -20,7 +20,7 @@ const StyledMenu = styled.div`
           padding: 10px;
           transition: box-shadow 0.2s ease-out, border-radius 0.2s ease-in, margin 0.1s ease-in;
 
-          li:hover {
+          &:hover {
             box-shadow: 0px 5px 0px 0px ${palette.basic.white};
             border-bottom-left-radius: 10px;
             border-bottom-right-radius: 10px;
@@ -29,7 +29,7 @@ const StyledMenu = styled.div`
 
           a {
             font-size: 1.2rem;
-            font-family: ${typography.primary};
+            font-family: ${typography.font.secondary};
             letter-spacing: 0.05em;
             color: ${palette.basic.white};
           }

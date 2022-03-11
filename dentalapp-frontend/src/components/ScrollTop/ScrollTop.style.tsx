@@ -11,7 +11,7 @@ const StyledScrollTop = styled.div`
       height: 50px;
       right: 20px;
       bottom: 20px;
-      z-index: 10;
+      z-index: 100;
 
       .scroll-top-button {
         width: 100%;

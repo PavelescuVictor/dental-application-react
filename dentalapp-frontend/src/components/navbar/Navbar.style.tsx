@@ -28,11 +28,12 @@ const StyledNavbar = styled.div`
         position: relative;
 
         h4 {
-          font-family: ${typography.primary};
+          font-family: ${typography.font.secondary};
           font-weight: 400;
           font-size: 2em;
           cursor: pointer;
           line-height: 100%;
+          color: ${palette.basic.white};
         }
       }
     `;

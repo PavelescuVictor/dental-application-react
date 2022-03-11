@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'components';
-import {
+import selectors, {
   selectIsLoggedIn,
   selectIsAdmin,
 } from 'store/slices/userManagerSlice/userManagerSelectors';
@@ -21,10 +20,11 @@ type MenuItemsValue = {
 };
 
 type MenuItems = {
-  [key in RouteTypes]: MenuItemsValue;
+  [key in RouteTypes]: MenuItemsValue | null;
 };
 
 const menuItems: MenuItems = {
+  [AllAccessRoutesTypes.DEFAULT]: null,
   [AllAccessRoutesTypes.HOME]: { displayName: 'Home', route: routePaths.HOME },
   [AllAccessRoutesTypes.LOGIN]: { displayName: 'Login', route: routePaths.LOGIN },
   [AllAccessRoutesTypes.NOT_FOUND_PAGE]: {
@@ -41,26 +41,22 @@ const menuItems: MenuItems = {
 
 const Menu = (): JSX.Element => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  // const isAdmin = useSelector(selectIsAdmin);
-  const isAdmin = false;
+  const isAdmin = useSelector(selectIsAdmin);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log(isLoggedIn);
-  }, [isLoggedIn]);
 
   const handleOnClickEvent = (redirectPath: string) => navigate(redirectPath);
 
-  const generateMenuListItem = (menuItemKey: RouteTypes): JSX.Element => (
-    <li key={menuItemKey}>
-      <Link
-        to={menuItems[menuItemKey].route}
-        onClick={() => handleOnClickEvent(menuItems[menuItemKey].route)}
-      >
-        {menuItems[menuItemKey].displayName}
-      </Link>
-    </li>
-  );
+  const generateMenuListItem = (menuItemKey: RouteTypes): JSX.Element | null => {
+    const menuItem = menuItems[menuItemKey];
+    if (!menuItem) return null;
+    return (
+      <li key={menuItemKey}>
+        <Link to={menuItem.route} onClick={() => handleOnClickEvent(menuItem.route)}>
+          {menuItem.displayName}
+        </Link>
+      </li>
+    );
+  };
 
   const generateMenuList = (): JSX.Element[] => {
     const generatedList: JSX.Element[] = [];
@@ -76,8 +72,14 @@ const Menu = (): JSX.Element => {
     const onlyAdminRoutesKeys = [OnlyAdminRoutesTypes.ADMIN_PAGE];
 
     allAccessRoutesKeys.forEach((key: RouteTypes) => {
-      if (key === AllAccessRoutesTypes.LOGIN && isLoggedIn) return '';
-      return generatedList.push(generateMenuListItem(key));
+      if (
+        (key === AllAccessRoutesTypes.LOGIN && isLoggedIn) ||
+        key === AllAccessRoutesTypes.DEFAULT
+      )
+        return '';
+      const item = generateMenuListItem(key);
+      if (!item) return '';
+      return generatedList.push(item);
     });
 
     onlyAuthenticatedRoutesKeys.forEach((key: RouteTypes) => {
@@ -87,12 +89,16 @@ const Menu = (): JSX.Element => {
         !isLoggedIn
       )
         return '';
-      return generatedList.push(generateMenuListItem(key));
+      const item = generateMenuListItem(key);
+      if (!item) return '';
+      return generatedList.push(item);
     });
 
     onlyAdminRoutesKeys.forEach((key: RouteTypes) => {
       if (key === OnlyAdminRoutesTypes.ADMIN_PAGE && !isAdmin) return '';
-      return generatedList.push(generateMenuListItem(key));
+      const item = generateMenuListItem(key);
+      if (!item) return '';
+      return generatedList.push(item);
     });
     return generatedList;
   };
