@@ -10,6 +10,7 @@ import {
   UserEditPayload,
   UserManagerState,
   AuthStatus,
+  User,
 } from './models';
 import { initialStateUserManager, USER_MANAGER_KEY } from './constants';
 
@@ -49,6 +50,24 @@ const login = createAsyncThunk(
     }
   }
 );
+
+const logout = createAsyncThunk('userManager/logout', async (_, thunkAPI) => {
+  try {
+    const { userToken } = (thunkAPI.getState() as RootState).userManager;
+    const response = await userManagerAPI.userLogout(userToken);
+    console.log(response);
+
+    localStorage.removeItem('user');
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('userTokenExpiry');
+    localStorage.removeItem('userProfile');
+
+    return;
+  } catch (error: any) {
+    console.log('Login Error:', error);
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
 
 const register = createAsyncThunk(
   'userManager/register',
@@ -103,7 +122,7 @@ const addProfile = createAsyncThunk(
       const response = await userManagerAPI.userAddProfile(user, userToken, userProfilePayload);
 
       const userProfile = response.data;
-      if (typeof userProfile != 'object') {
+      if (typeof userProfile !== 'object') {
         localStorage.removeItem('userProfile');
         return initialStateUserManager.userProfile;
       }
@@ -127,7 +146,7 @@ const editProfile = createAsyncThunk(
       const { user, userToken } = (thunkAPI.getState() as RootState).userManager;
       const response = await userManagerAPI.userEditProfile(user, userToken, userEditPayload);
       const userProfile = response.data;
-      if (typeof userProfile != 'object') {
+      if (typeof userProfile !== 'object') {
         localStorage.removeItem('userProfile');
         return initialStateUserManager.userProfile;
       }
@@ -170,7 +189,7 @@ export const userManagerSlice = createSlice({
       state.authStatus = action.payload;
     },
 
-    setUser(state: UserManagerState, action: PayloadAction<string>) {
+    setUser(state: UserManagerState, action: PayloadAction<User>) {
       state.user = action.payload;
     },
 
@@ -216,14 +235,32 @@ export const userManagerSlice = createSlice({
 
     builder.addCase(login.fulfilled, (state: UserManagerState, { payload }: PayloadAction<any>) => {
       const { user, userToken, userTokenExpiry } = payload;
-      console.log({ user, userToken, userTokenExpiry });
       state.user = user;
       state.userToken = userToken;
       state.userTokenExpiry = userTokenExpiry;
+      state.isLoggedIn = true;
     });
 
     builder.addCase(login.rejected, (state: UserManagerState) => {
       state.hasErrorLoggingIn = true;
+      state.isLoggedIn = false;
+    });
+
+    // Logout
+    builder.addCase(logout.pending, (state: UserManagerState) => {
+      state.hasErrorLoggingOut = false;
+    });
+
+    builder.addCase(logout.fulfilled, (state: UserManagerState, _) => {
+      state.user = initialStateUserManager.user;
+      state.userToken = initialStateUserManager.userToken;
+      state.userTokenExpiry = initialStateUserManager.userTokenExpiry;
+      state.userProfile = initialStateUserManager.userProfile;
+      state.isLoggedIn = false;
+    });
+
+    builder.addCase(logout.rejected, (state: UserManagerState) => {
+      state.hasErrorLoggingOut = true;
     });
 
     // Register
@@ -322,6 +359,7 @@ export const userManagerActions = {
 
 export const userManagerAsyncThunks = {
   login,
+  logout,
   register,
   requestProfile,
   addProfile,

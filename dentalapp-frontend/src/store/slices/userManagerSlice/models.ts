@@ -24,11 +24,13 @@ export interface User {
 
 export interface UserManagerState {
   authStatus: AuthStatus;
+  isLoggedIn: boolean;
   user: User | null;
   userToken: string | null;
   userTokenExpiry: string | null;
   userProfile: string;
   hasErrorLoggingIn: boolean;
+  hasErrorLoggingOut: boolean;
   hasErrorRegistering: boolean;
   hasErrorRenewingToken: boolean;
   hasErrorRequestingProfile: boolean;

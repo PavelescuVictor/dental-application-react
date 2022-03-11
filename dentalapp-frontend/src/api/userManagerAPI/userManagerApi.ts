@@ -6,13 +6,22 @@ import {
   UserEditPayload,
   RenewTokenPayload,
 } from 'store/slices/userManagerSlice/models';
-import { REGISTER_URL, LOGIN_URL, PROFILE_URL, RENEW_TOKEN_URL } from './constants';
+import { REGISTER_URL, LOGIN_URL, LOGOUT_URL, PROFILE_URL, RENEW_TOKEN_URL } from './constants';
 
 export const userRegister = async (registerPayload: RegisterPayload) =>
   axios({
     url: REGISTER_URL,
     data: registerPayload,
     method: 'POST',
+  });
+
+export const userLogout = async (userToken: string) =>
+  axios({
+    url: LOGOUT_URL,
+    method: 'POST',
+    headers: {
+      Authorization: `Token ${userToken}`,
+    },
   });
 
 export const userLogin = async (loginPayload: LoginPayload) =>
