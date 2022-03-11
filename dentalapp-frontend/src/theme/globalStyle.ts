@@ -1,6 +1,7 @@
 import { createGlobalStyle, css } from 'styled-components';
 import palette from './palette';
 import typography from './typography';
+import 'assets/fonts/index.css';
 
 export const SCROLLBAR_WEIGHT = '6px';
 
@@ -25,7 +26,7 @@ export const coreGlobalStyle = css`
     background-color: ${palette.gray.cod};
     box-sizing: border-box;
     color: ${palette.gray.alpha};
-    font-family: ${typography.font.medium};
+    font-family: ${typography.font.primary};
     margin: 0;
     padding: 0;
 
