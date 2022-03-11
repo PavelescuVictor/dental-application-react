@@ -79,13 +79,13 @@ Backend contains an API that uses REST Arhitecture created using Django Rest Fra
 
 **ORDER TYPE ENTRIES** <br>
 
-| Requests                                           | Request Description                                 |
-| :------------------------------------------------- | :-------------------------------------------------- |
-| POST /api/v1/order_type_entries/                   | Order Type Entries New Order Type Entry             |
-| GET /api/v1/order_type_entries/                    | Order Type Entries List                             |
-| GET /api/v1/order_type_entries/:id/                | Order Type Entries Specific Order Type Entry        |
-| DELETE /api/v1/order_type_entries/:id/             | Order Type Entries Delete Specific Order Type Entry |
-| PATCH /api/v1/order_type_entries/:id/              | Order Type Entries Update Specific Order Type Entry |
+| Requests                               | Request Description                                 |
+| :------------------------------------- | :-------------------------------------------------- |
+| POST /api/v1/order_type_entries/       | Order Type Entries New Order Type Entry             |
+| GET /api/v1/order_type_entries/        | Order Type Entries List                             |
+| GET /api/v1/order_type_entries/:id/    | Order Type Entries Specific Order Type Entry        |
+| DELETE /api/v1/order_type_entries/:id/ | Order Type Entries Delete Specific Order Type Entry |
+| PATCH /api/v1/order_type_entries/:id/  | Order Type Entries Update Specific Order Type Entry |
 
 <br>
 
@@ -118,29 +118,29 @@ Backend contains an API that uses REST Arhitecture created using Django Rest Fra
 
 ## Project Stack:
 
--   **Front-End: Html, CSS, Javascript, Vue, VueX, Vue Router, Vuetify, Axios, FontAwesome, Google Fonts Api;**
--   **Back-End: Python, Django, Django Rest Framework, Django Rest Knox, sqlite;**
+- **Front-End: Html, CSS, Javascript, Vue, VueX, Vue Router, Vuetify, Axios, FontAwesome, Google Fonts Api;**
+- **Back-End: Python, Django, Django Rest Framework, Django Rest Knox, sqlite;**
 
 ## Functionalities:
 
--   Authentication System using Django Rest Knox based on TokenAuthentication build in Django Rest Framework.
-    1. Register,
-    2. Login,
-    3. Logout,
--   Password Change
--   Password Reset with email using Django Rest PasswordResest,
--   Each user can create an user profile,
--   Different types of permissions for the users,
--   Create/Read/Update/Delete functionalities for doctor, pacient, order,
--   Adding some functionality only for the admin page controlling permissions and data for Order Type and Order S,tatus,
--   Showing list of users and Create/Read/Update/Delete functionalities for the admin,
--   Showing lists of doctors, pacients, order and filtering them using query parameters,
--   Ordering by different fields in the database,
+- Authentication System using Django Rest Knox based on TokenAuthentication build in Django Rest Framework.
+  1. Register,
+  2. Login,
+  3. Logout,
+- Password Change
+- Password Reset with email using Django Rest PasswordResest,
+- Each user can create an user profile,
+- Different types of permissions for the users,
+- Create/Read/Update/Delete functionalities for doctor, pacient, order,
+- Adding some functionality only for the admin page controlling permissions and data for Order Type and Order S,tatus,
+- Showing list of users and Create/Read/Update/Delete functionalities for the admin,
+- Showing lists of doctors, pacients, order and filtering them using query parameters,
+- Ordering by different fields in the database,
 
 ## Upcomming improvements:
 
--   Adding Typescript,
--   Adding SASS,
--   Adding Backing up data to Excell functionality on a schedule or by interacting with a frontend element,
--   Adding About page,
--   Adding Staff page,
+- Adding Typescript - V,
+- Adding SASS - Went with Styled Components after refactoring from Vue to React,
+- Adding Backing up data to Excell functionality on a schedule or by interacting with a frontend element,
+- Adding About page,
+- Adding Staff page,
