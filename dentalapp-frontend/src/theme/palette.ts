@@ -14,7 +14,8 @@ interface PaletteProps {
 
 const palette: PaletteProps = {
   primary: '#40cb9e',
-  secondary: '#4c84ff',
+  // secondary: '#4c84ff',
+  secondary: '#5602ca',
   active: 'rgba(226,0,116,0.5)',
   inactive: 'rgba(0, 0, 0, 0.5);',
   gray: {
@@ -45,7 +46,8 @@ const palette: PaletteProps = {
     error: '#e63d3d',
     // errorLight: '#FCD9D9',
     // errorDark: '#d90000',
-    info: '#009de0',
+    // info: '#009de0',
+    info: '#FFF',
   },
   basic: {
     black: '#000',
