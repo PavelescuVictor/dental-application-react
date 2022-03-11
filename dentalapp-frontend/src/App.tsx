@@ -1,6 +1,5 @@
-import { Suspense, lazy } from 'react';
-import { Routes } from 'react-router-dom';
-import { Navbar, SplashScreen, ScrollTop, Footer, ProtectedRoute } from 'components';
+import { Suspense } from 'react';
+import { Navbar, SplashScreen, ScrollTop, Footer, GlobalAlertLoader } from 'components';
 import routes, { renderRoutes } from 'routes/routes';
 
 // const Home = lazy(() =>
@@ -17,6 +16,7 @@ function App() {
   return (
     <Suspense fallback={<SplashScreen />}>
       <Navbar />
+      <GlobalAlertLoader />
       {renderRoutes(routes)}
       <ScrollTop />
       <Footer />

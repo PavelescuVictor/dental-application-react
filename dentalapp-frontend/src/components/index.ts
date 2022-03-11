@@ -10,3 +10,4 @@ export { default as Logo } from './logo';
 export { default as Link } from './link';
 export { default as Page } from './page';
 export { default as ProtectedRoute } from './protectedRoute';
+export { default as GlobalAlertLoader } from './globalAlertLoader';

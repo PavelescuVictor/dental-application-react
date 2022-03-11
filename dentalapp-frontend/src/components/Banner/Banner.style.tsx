@@ -14,12 +14,14 @@ const StyledBanner = styled.div`
 
       .background {
         width: 100%;
-        height: 100%;
+        min-height: 100%;
         overflow: hidden;
         position: absolute;
+        transform: scale(1.3);
+        transform-origin: top left;
 
         svg {
-          width: 100%;
+          min-height: 100vh;
         }
       }
 
@@ -29,16 +31,14 @@ const StyledBanner = styled.div`
         position: absolute;
         top: 0%;
         left: 0%;
-        opacity: 0%;
-        animation: fadeIn 0.8s ease-out forwards;
-        z-index: 4;
+        z-index: 20;
       }
 
-      .gradient-left {
+      .gradient--left {
         background: linear-gradient(90deg, rgba(0, 0, 0, 0.5) 0%, rgba(255, 255, 255, 0) 25%);
       }
 
-      .gradient-right {
+      .gradient--right {
         background: linear-gradient(270deg, rgba(0, 0, 0, 0.5) 0%, rgba(255, 255, 255, 0) 25%);
       }
 
@@ -49,7 +49,7 @@ const StyledBanner = styled.div`
         display: flex;
         align-items: flex-end;
         justify-content: center;
-        z-index: 10;
+        z-index: 30;
       }
 
       .content__main {
@@ -59,16 +59,7 @@ const StyledBanner = styled.div`
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding-bottom: 5%;
-
-        p {
-          color: ${palette.basic.white};
-          font-size: 1rem;
-          line-height: 1rem;
-          padding: 10px 10px 0px 10px;
-          animation: banner__text__p 1s 1,
-            banner__logo__stroke-change 0.9s ease-in-out forwards 0.55s;
-        }
+        padding-bottom: 4vh;
 
         .banner__learn-more {
           display: inline-block;
@@ -77,13 +68,20 @@ const StyledBanner = styled.div`
           font-size: 1rem;
           padding: 0.8em 0.5em;
           margin: 1em auto;
-          background: -webkit-linear-gradient(-90deg, transparent 50%, white 50%);
+          background: -webkit-linear-gradient(-90deg, transparent 50%, ${palette.basic.white} 50%);
           background-size: 6.5em 6.5em;
           border: 3px solid ${palette.basic.white};
           border-radius: 10px;
           transition: width 0.2s ease-in, border-radius 0.2s ease-out, background-position 0.6s ease;
-          animation: banner__text__button 1s;
+          letter-spacing: -10px;
+          animation: learn-more__stretch 0.4s ease-out,
+            learn-more__letter-spacing 0.4s ease-out forwards;
           color: ${palette.secondary};
+
+          a {
+            opacity: 0%;
+            animation: fadeIn 0.4s ease-in 0.3s forwards;
+          }
 
           &:hover {
             width: 8.5em;
@@ -102,6 +100,14 @@ const StyledBanner = styled.div`
         }
       }
 
+      .logo {
+        transform: translate(-50%, 0%);
+        position: absolute;
+        bottom: 15vh;
+        left: 50%;
+        z-index: 2;
+      }
+
       .main {
         height: 50vh;
         transform: translate(-50%, 0%);
@@ -112,7 +118,7 @@ const StyledBanner = styled.div`
       }
 
       .top-left-leaves {
-        height: 25vh;
+        height: 40vh;
         position: absolute;
         top: 10%;
         left: 5%;
@@ -120,7 +126,7 @@ const StyledBanner = styled.div`
       }
 
       .top-right-leaves {
-        height: 25vh;
+        height: 40vh;
         position: absolute;
         top: 10%;
         right: 5%;
@@ -128,7 +134,7 @@ const StyledBanner = styled.div`
       }
 
       .girl {
-        height: 75vh;
+        height: 85vh;
         width: 40vw;
         position: absolute;
         bottom: 0px;
@@ -137,9 +143,8 @@ const StyledBanner = styled.div`
       }
 
       .guy {
-        height: 75vh;
+        height: 85vh;
         width: 40vw;
-        transform: scale(0.9);
         position: absolute;
         bottom: 0px;
         right: 0%;
@@ -157,44 +162,20 @@ const StyledBanner = styled.div`
       }
 
       /* Animations */
-      @keyframes banner__text__p {
+      @keyframes learn-more__stretch {
         0% {
-          opacity: 0%;
-          margin-top: -3.5em;
+          width: 30px;
         }
-        30% {
-          letter-spacing: 0.05em;
-        }
-        40% {
-          opacity: 0%;
-        }
+
         50% {
-          letter-spacing: -0.1em;
+          width: 140px;
+          border-radius: 30px;
         }
       }
 
-      @keyframes banner__text__p__color-change {
-        0% {
-          color: white;
-        }
-        50% {
-          color: var(--color-blue);
-        }
-        100% {
-          color: white;
-        }
-      }
-
-      @keyframes banner__text__button {
-        0% {
-          opacity: 0%;
-        }
-        30% {
-          width: 10em;
-          letter-spacing: -0.1em;
-        }
-        100% {
-          width: 6.5em;
+      @keyframes learn-more__letter-spacing {
+        to {
+          letter-spacing: 0px;
         }
       }
     `;

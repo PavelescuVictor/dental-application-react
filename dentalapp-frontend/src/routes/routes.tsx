@@ -68,25 +68,25 @@ const onlyAuthenticatedRoutes: RouteItemType[] = [
     exact: true,
     path: routePaths.DOCTORS,
     routeType: OnlyAuthenticatedRoutesTypes.DOCTORS,
-    component: () => null,
+    component: lazy(() => import('modules/doctorsDashboard')),
   },
   {
     exact: true,
     path: routePaths.PATIENTS,
     routeType: OnlyAuthenticatedRoutesTypes.PATIENTS,
-    component: () => null,
+    component: lazy(() => import('modules/patients')),
   },
   {
     exact: true,
     path: routePaths.ORDERS,
     routeType: OnlyAuthenticatedRoutesTypes.ORDERS,
-    component: () => null,
+    component: lazy(() => import('modules/orders')),
   },
   {
     exact: true,
     path: routePaths.LOGOUT,
     routeType: OnlyAuthenticatedRoutesTypes.LOGOUT,
-    component: () => null,
+    component: lazy(() => import('modules/logout')),
   },
   {
     exact: true,
@@ -101,7 +101,7 @@ const onlyAdminRoutes: RouteItemType[] = [
     exact: true,
     path: routePaths.ADMIN_PAGE,
     routeType: OnlyAdminRoutesTypes.ADMIN_PAGE,
-    component: () => null,
+    component: lazy(() => import('modules/admin')),
   },
 ];
 
