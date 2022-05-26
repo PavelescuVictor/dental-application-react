@@ -1,7 +1,7 @@
-import { requestPatientList, addPatient, removePatient, editPatient } from './patientsManagerApi';
+import { requestPatients, addPatient, removePatient, editPatient } from './patientsManagerApi';
 
 const patientManagerAPI = {
-  requestPatientList,
+  requestPatients,
   addPatient,
   removePatient,
   editPatient,

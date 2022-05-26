@@ -6,7 +6,7 @@ import {
 } from 'store/slices/doctorManagerSlice/models';
 import { DOCTOR_URL } from './constants';
 
-export const requestDoctorList = async (userToken: string) =>
+export const requestDoctors = async (userToken: string) =>
   axios({
     url: DOCTOR_URL,
     method: 'GET',
@@ -25,8 +25,6 @@ export const addDoctor = async (userToken: string, payload: AddDoctorPayload, us
     data: {
       firstName: payload.firstName,
       lastName: payload.lastName,
-      cabinet: payload.cabinet,
-      phone: payload.phone,
       createdBy: userId,
       updatedBy: userId,
     },
@@ -51,8 +49,6 @@ export const editDoctor = async (userToken: string, payload: EditDoctorPayload, 
     data: {
       firstName: payload.firstName,
       lastName: payload.lastName,
-      cabinet: payload.cabinet,
-      phone: payload.phone,
       updatedBy: userId,
     },
   });

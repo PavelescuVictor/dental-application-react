@@ -1,14 +1,12 @@
 import svgAssets from 'assets/images';
-import { Button, Logo } from 'components';
+import { Button, Logo, Background } from 'components';
 import StyledBanner from './Banner.style';
 
-const { Background, Main, TopLeftLeaves, TopRightLeaves, Girl, Guy } = svgAssets;
+const { Main, TopLeftLeaves, TopRightLeaves, Girl, Guy } = svgAssets;
 
 const Banner = (): JSX.Element => (
   <StyledBanner>
-    <div className="background">
-      <Background />
-    </div>
+    <Background />
     <div className="gradient gradient--left" />
     <div className="gradient gradient--right" />
     <div className="banner__content">

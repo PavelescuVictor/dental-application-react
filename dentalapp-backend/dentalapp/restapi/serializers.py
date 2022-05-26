@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
-from .models import Doctor, Patient, Order, OrderType, OrderStatus, OrderTypeEntry, OrderColor
+from .models import Doctor, DoctorDetails, Patient, PatientDetails, Order, OrderType, OrderStatus, OrderTypeEntry, OrderColor
 
 # ModelSerializer is from django rest framework
 
@@ -16,7 +16,7 @@ class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
         fields = [
-            'id', 'firstName', 'lastName', 'cabinet', 'phone', 'createdBy', 'updatedBy', 'createdAt', 'updatedAt'
+            'id', 'firstName', 'lastName', 'createdBy', 'updatedBy', 'createdAt', 'updatedAt'
         ]
         validators = [
             UniqueTogetherValidator(
@@ -25,16 +25,33 @@ class DoctorSerializer(serializers.ModelSerializer):
         ]
 
 
+class DoctorDetailsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = DoctorDetails
+        fields = [
+            'id', 'doctorId', 'cabinet', 'phone', 'createdBy', 'updatedBy', 'createdAt', 'updatedAt'
+        ]
+
+
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = [
-            'id', 'firstName', 'lastName', 'phone', 'details', 'createdBy', 'updatedBy', 'createdAt', 'updatedAt'
+            'id', 'firstName', 'lastName', 'createdBy', 'updatedBy', 'createdAt', 'updatedAt'
         ]
         validators = [
             UniqueTogetherValidator(
                 queryset=Patient.objects.all(), fields=['firstName', 'lastName'], message="Cannot add patient. Reason:  Patient already exists!"
             )
+        ]
+
+
+class PatientDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Patient
+        fields = [
+            'id', 'patientId', 'phone', 'details', 'createdBy', 'updatedBy', 'createdAt', 'updatedAt'
         ]
 
 
@@ -52,7 +69,7 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = [
-            'id', 'doctor', 'doctorName', 'patient', 'patientName', 'createdBy', 'createdByName', 'updatedBy', 'updatedByName', 'createdAt', 'updatedAt'
+            'id', 'doctor', 'doctorName', 'patient', 'patientName', 'redo', 'paid', 'createdBy', 'createdByName', 'updatedBy', 'updatedByName', 'createdAt', 'updatedAt'
         ]
 
 
@@ -65,7 +82,7 @@ class OrderTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderType
         fields = [
-            'id', 'type', 'ppu', 'createdBy', 'updatedBy', 'createdAt', 'updatedAt'
+            'id', 'type', 'createdBy', 'updatedBy', 'createdAt', 'updatedAt'
         ]
 
 
@@ -101,6 +118,7 @@ class OrderTypeEntrySerializer(serializers.ModelSerializer):
     typeName = serializers.CharField(
         source='type.__str__', read_only=True
     )
+
     typePPU = serializers.CharField(
         source='type.ppu', read_only=True
     )
@@ -116,13 +134,14 @@ class OrderTypeEntrySerializer(serializers.ModelSerializer):
     createdByName = serializers.CharField(
         source='createdBy.__str__', read_only=True
     )
+
     updatedByName = serializers.CharField(
         source='updatedBy.__str__', read_only=True)
 
     class Meta:
         model = OrderTypeEntry
         fields = [
-            'id', 'order', 'color', 'colorName', 'type', 'typeName', 'typePPU', 'status', 'statusName', 'unitCount', 'redo', 'paid', 'warranty', 'createdBy', 'createdByName', 'updatedBy', 'updatedByName', 'createdAt', 'updatedAt'
+            'id', 'order', 'color', 'colorName', 'type', 'typeName', 'typePPU', 'status', 'statusName', 'unitCount', 'warranty', 'createdBy', 'createdByName', 'updatedBy', 'updatedByName', 'createdAt', 'updatedAt'
         ]
         extra_kwargs = {
             'order': {

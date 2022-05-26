@@ -6,7 +6,7 @@ export const initialStateUserManager: UserManagerState = {
   user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '') : null,
   userToken: localStorage.getItem('userToken') || null,
   userTokenExpiry: localStorage.getItem('userTokenExpiry') || null,
-  userProfile: localStorage.getItem('userProfile') || '',
+  userProfile: localStorage.getItem('userProfile') || null,
   hasErrorLoggingIn: false,
   hasErrorLoggingOut: false,
   hasErrorRegistering: false,

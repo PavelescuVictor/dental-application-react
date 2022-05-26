@@ -12,19 +12,6 @@ const StyledBanner = styled.div`
       /* padding: 8em 4em 6em 4em; */
       position: relative;
 
-      .background {
-        width: 100%;
-        min-height: 100%;
-        overflow: hidden;
-        position: absolute;
-        transform: scale(1.3);
-        transform-origin: top left;
-
-        svg {
-          min-height: 100vh;
-        }
-      }
-
       .gradient {
         height: 100%;
         width: 100%;

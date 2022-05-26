@@ -11,7 +11,7 @@ const StyledGlobalAlertLoader = styled.div<StyledGlobalAlertLoaderProps>`
       theme: { palette },
     } = props;
     return css`
-      position: absolute;
+      position: fixed;
       top: 8vh;
       left: 50%;
       transform: translate(-50%, 0);
@@ -25,10 +25,10 @@ const StyledGlobalAlertLoader = styled.div<StyledGlobalAlertLoaderProps>`
       border-radius: 10px;
       animation: alert-box__slide-down 0.5s ease-out forwards, alert-box__fill .8s ease-out forwards .1s;
       user-select: none;
-      z-index: 10;
+      z-index: 1000;
+      cursor: pointer;
 
       p {
-        cursor: pointer;
         opacity: 0%;
         text-align: center;
         color: ${palette.basic.white};
@@ -42,7 +42,8 @@ const StyledGlobalAlertLoader = styled.div<StyledGlobalAlertLoaderProps>`
         position: absolute;
         right: 20px;
         opacity: 0;
-        transform: rotate(30deg)
+        transition: opacity .2s ease-in-out;
+        cursor: pointer;
       }
 
       &:hover {
@@ -50,13 +51,8 @@ const StyledGlobalAlertLoader = styled.div<StyledGlobalAlertLoaderProps>`
           padding: 0 20px 0 10px;
         }
 
-        p::after {
-          content: '';
-        }
-
         .hide-button {
           opacity: 1;
-          transform: rotate(-30deg)
         }
       }
 
@@ -87,6 +83,10 @@ const StyledGlobalAlertLoader = styled.div<StyledGlobalAlertLoaderProps>`
         );
         background-size: 6.5em 8.5em;
         border-color: ${palette.validation.valid};
+
+        .hide-button {
+          color: ${palette.basic.white}
+        }
       }
 
       &.warning {
@@ -97,6 +97,10 @@ const StyledGlobalAlertLoader = styled.div<StyledGlobalAlertLoaderProps>`
         );
         background-size: 6.5em 8.5em;
         border-color: ${palette.validation.warning};
+
+        .hide-button {
+          color: ${palette.basic.white}
+        }
       }
 
       &.error {
@@ -107,6 +111,10 @@ const StyledGlobalAlertLoader = styled.div<StyledGlobalAlertLoaderProps>`
         );
         background-size: 6.5em 8.5em;
         border-color: ${palette.validation.error};
+
+        .hide-button {
+          color: ${palette.basic.white}
+        }
       }
 
       @keyframes alert-box__fill {
@@ -146,28 +154,6 @@ const StyledGlobalAlertLoader = styled.div<StyledGlobalAlertLoaderProps>`
         100% {
           opacity: 1;
           letter-spacing: 0px;
-        }
-      }
-
-      @keyframes alert-box__shake {
-        0% {
-          transform: rotate(0deg);
-        }
-
-        20% {
-          transform: rotate(5deg);
-        }
-
-        40% {
-          transform: rotate(-10deg);
-        }
-
-        60% {
-          transform: rotate(10deg);
-        }
-
-        100% {
-          transform: rotate(-5deg);
         }
       }
     `;

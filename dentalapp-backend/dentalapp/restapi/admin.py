@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 from django.forms.models import BaseInlineFormSet
-from .models import Doctor, Patient, Order, OrderType, OrderStatus, OrderColor, OrderTypeEntry
+from .models import Doctor, DoctorDetails, Patient, PatientDetails, Order, OrderType, OrderStatus, OrderColor, OrderTypeEntry
 
 # Register your models here.
 
@@ -18,21 +18,40 @@ class OrderTypeEntryInline(admin.TabularInline):
     # Using extra to display and exact amount of extra field forms for the OrderTypeEntry in the creation form of a model.
     extra = 1
     fields = [
-        'order', 'color', 'type', 'status', 'unitCount', 'redo', 'paid', 'warranty'
+        'order', 'color', 'type', 'status', 'unitCount', 'warranty', 'ppu'
     ]
 
 
 class DoctorAdmin(admin.ModelAdmin):
     fields = [
-        'firstName', 'lastName', 'cabinet', 'phone'
+        'firstName', 'lastName'
     ]
 
     list_display = [
-        'id', 'fullName', 'firstName', 'lastName', 'cabinet', 'phone', 'createdBy', 'createdAt', 'updatedBy', 'updatedAt'
+        'id', 'fullName', 'firstName', 'lastName', 'createdBy', 'createdAt', 'updatedBy', 'updatedAt'
     ]
 
     search_fields = [
-        'firstName', 'lastName', 'cabinet', 'phone', 'createdBy__email'
+        'firstName', 'lastName', 'createdBy__email'
+    ]
+
+    def save_model(self, request, obj, form, change):
+        obj.createdBy = request.user
+        obj.updatedBy = request.user
+        super().save_model(request, obj, form, change)
+
+
+class DoctorDetailsAdmin(admin.ModelAdmin):
+    fields = [
+        'doctorId', 'cabinet', 'phone'
+    ]
+
+    list_display = [
+        'id', 'doctorId', 'cabinet', 'phone', 'createdBy', 'createdAt', 'updatedBy', 'updatedAt'
+    ]
+
+    search_fields = [
+        'cabinet', 'phone', 'createdBy__email'
     ]
 
     def save_model(self, request, obj, form, change):
@@ -43,13 +62,30 @@ class DoctorAdmin(admin.ModelAdmin):
 
 class PatientAdmin(admin.ModelAdmin):
     fields = [
-        'firstName', 'lastName', 'phone', 'details'
+        'firstName', 'lastName'
     ]
     list_display = [
-        'id', 'fullName', 'firstName', 'lastName', 'phone', 'details', 'createdBy', 'createdAt', 'updatedBy', 'updatedAt'
+        'id', 'fullName', 'firstName', 'lastName', 'createdBy', 'createdAt', 'updatedBy', 'updatedAt'
     ]
     search_fields = [
-        'firstName', 'lastName', 'phone', 'createdBy__username'
+        'firstName', 'lastName', 'createdBy__username'
+    ]
+
+    def save_model(self, request, obj, form, change):
+        obj.createdBy = request.user
+        obj.updatedBy = request.user
+        super().save_model(request, obj, form, change)
+
+
+class PatientDetailsAdmin(admin.ModelAdmin):
+    fields = [
+        'phone', 'details'
+    ]
+    list_display = [
+        'id', 'patientId', 'phone', 'details', 'createdBy', 'createdAt', 'updatedBy', 'updatedAt'
+    ]
+    search_fields = [
+        'phone', 'createdBy__username'
     ]
 
     def save_model(self, request, obj, form, change):
@@ -60,10 +96,10 @@ class PatientAdmin(admin.ModelAdmin):
 
 class OrderAdmin(admin.ModelAdmin):
     fields = [
-        'doctor', 'patient'
+        'doctor', 'patient', 'paid', 'redo'
     ]
     list_display = [
-        'id', 'doctor', 'patient', 'createdBy', 'createdAt', 'updatedBy', 'updatedAt'
+        'id', 'doctor', 'patient', 'paid', 'redo', 'createdBy', 'createdAt', 'updatedBy', 'updatedAt'
     ]
     search_fields = [
         'type__type', 'doctor__firstName', 'doctor__lastName', 'patient__firstName', 'patient__lastName', 'createdBy__username'
@@ -103,23 +139,17 @@ class OrderAdmin(admin.ModelAdmin):
 
 class OrderTypeAdmin(admin.ModelAdmin):
     fields = [
-        'type', 'ppu'
+        'type'
     ]
     list_display = [
-        'id', 'type', 'getPricePerUnit', 'createdBy', 'createdAt', 'updatedBy', 'updatedAt'
+        'id', 'type', 'createdBy', 'createdAt', 'updatedBy', 'updatedAt'
     ]
     search_fields = [
-        'type', 'ppu', 'createdBy__email'
+        'type', 'createdBy__email'
     ]
 
     def getOrderId(self, obj):
         return obj.order.id
-
-    def getPricePerUnit(self, obj):
-        return obj.ppu
-
-    getPricePerUnit.admin_order_field = 'ppu'
-    getPricePerUnit.short_description = 'Price Per Unit'
 
     def save_model(self, request, obj, form, change):
         obj.createdBy = request.user
@@ -163,10 +193,10 @@ class OrderColorAdmin(admin.ModelAdmin):
 
 class OrderTypeEntryAdmin(admin.ModelAdmin):
     fields = [
-        'order', 'color', 'type', 'status', 'unitCount', 'redo', 'paid', 'warranty'
+        'order', 'color', 'type', 'status', 'unitCount', 'warranty', 'ppu'
     ]
     list_display = [
-        'id', 'getOrderId', 'getOrderDoctor', 'getOrderPatient', 'color', 'type', 'status', 'unitCount', 'redo', 'paid', 'warranty', 'createdBy', 'createdAt', 'updatedBy', 'updatedAt'
+        'id', 'getOrderId', 'getOrderDoctor', 'getOrderPatient', 'color', 'type', 'status', 'unitCount', 'warranty', 'getPricePerUnit', 'createdBy', 'createdAt', 'updatedBy', 'updatedAt'
     ]
     search_fields = [
         'order', 'type__type', 'order__doctor__firstName', 'order__doctor__lastName', 'order__patient__firstName', 'order__patient__lastName', 'status__status', 'createdBy__email'
@@ -190,6 +220,12 @@ class OrderTypeEntryAdmin(admin.ModelAdmin):
     getOrderPatient.admin_order_field = 'order__patient'
     getOrderPatient.short_description = 'Patient'
 
+    def getPricePerUnit(self, obj):
+        return obj.ppu
+
+    getPricePerUnit.admin_order_field = 'ppu'
+    getPricePerUnit.short_description = 'Price Per Unit'
+
     def save_model(self, request, obj, form, change):
         obj.createdBy = request.user
         obj.updatedBy = request.user
@@ -197,7 +233,9 @@ class OrderTypeEntryAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Doctor, DoctorAdmin)
+admin.site.register(DoctorDetails, DoctorDetailsAdmin)
 admin.site.register(Patient, PatientAdmin)
+admin.site.register(PatientDetails, PatientDetailsAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderType, OrderTypeAdmin)
 admin.site.register(OrderStatus, OrderStatusAdmin)

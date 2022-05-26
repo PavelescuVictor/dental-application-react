@@ -25,6 +25,28 @@ User = user_model()
 class Doctor(models.Model):
     firstName = models.CharField(max_length=100, verbose_name="First Name")
     lastName = models.CharField(max_length=100, verbose_name="Last Name")
+    createdBy = models.ForeignKey(User,
+                                  on_delete=models.SET_NULL, null=True,
+                                  related_name='+')
+    updatedBy = models.ForeignKey(User,
+                                  on_delete=models.SET_NULL, null=True,
+                                  related_name='+')
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering: ['fullName', 'firstName', 'lastName']
+        verbose_name = "Doctor"
+        verbose_name_plural = "Doctors"
+
+    def fullName(self):
+        return f'{self.firstName} {self.lastName}'
+
+    def __str__(self):
+        return self.fullName()
+
+class DoctorDetails(models.Model):
+    doctorId = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=False, related_name="+")
     cabinet = models.TextField(max_length=300, verbose_name="Cabinet")
     phone = PhoneNumberField(null=False, blank=False,
                              unique=True, verbose_name="Numar Telefon")
@@ -38,15 +60,10 @@ class Doctor(models.Model):
     updatedAt = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering: ['fullName', 'firstName', 'lastName']
-        verbose_name = "Doctor"
-        verbose_name_plural = "Doctors"
+        ordering: ['cabinet']
+        verbose_name = "Doctor Details"
+        verbose_name_plural = "Doctor Details"
 
-    def fullName(self):
-        return f'{self.firstName} {self.lastName}'
-
-    def __str__(self):
-        return self.fullName()
 
 
 class Patient(models.Model):
@@ -74,10 +91,30 @@ class Patient(models.Model):
     def __str__(self):
         return self.fullName()
 
+class PatientDetails(models.Model):
+    patientId = models.ForeignKey(Patient, on_delete=models.CASCADE, null=False, related_name="+")
+    phone = PhoneNumberField(null=False, blank=False, unique=True)
+    details = models.TextField(max_length=300)
+    createdBy = models.ForeignKey(User,
+                                  on_delete=models.SET_NULL, null=True,
+                                  related_name='+')
+    updatedBy = models.ForeignKey(User,
+                                  on_delete=models.SET_NULL, null=True,
+                                  related_name='+')
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering: ['patientId']
+        verbose_name = "Patient Details"
+        verbose_name_plural = "Patient Details"
+
 
 class Order(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT)
     patient = models.ForeignKey(Patient, on_delete=models.PROTECT)
+    redo = models.BooleanField(default=False)
+    paid = models.BooleanField(default=False)
     createdBy = models.ForeignKey(User,
                                   on_delete=models.SET_NULL, null=True,
                                   related_name='+')
@@ -95,7 +132,6 @@ class Order(models.Model):
 
 class OrderType(models.Model):
     type = models.TextField(null=False, blank=False, unique=True)
-    ppu = models.PositiveIntegerField(null=False, blank=False)
     createdBy = models.ForeignKey(User,
                                   on_delete=models.SET_NULL, null=True,
                                   related_name='+')
@@ -162,10 +198,9 @@ class OrderTypeEntry(models.Model):
         OrderStatus, on_delete=models.PROTECT)
     unitCount = models.PositiveIntegerField(
         default=1, validators=[MinValueValidator(1)], blank=False)
-    redo = models.BooleanField(default=False)
-    paid = models.BooleanField(default=False)
     warranty = models.PositiveIntegerField(
         default=0, validators=[MinValueValidator(0)], blank=False)
+    ppu = models.PositiveIntegerField(null=False, blank=False)
     createdBy = models.ForeignKey(User,
                                   on_delete=models.SET_NULL, null=True,
                                   related_name='+')

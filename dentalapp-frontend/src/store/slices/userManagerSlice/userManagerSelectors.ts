@@ -17,8 +17,9 @@ export const selectUserProfile = ({ userManager: state }: RootState) => state.us
 export const selectIsLoggedIn = ({ userManager: state }: RootState) => !!state.userToken;
 export const selectIsAdmin = ({ userManager: state }: RootState) => {
   if (state.user) {
-    if (typeof state.user === 'object') return state.user.isAdmin;
-
+    if (typeof state.user === 'object') {
+      return state.user.isAdmin;
+    }
     return JSON.parse(state.user).isAdmin;
   }
   return false;

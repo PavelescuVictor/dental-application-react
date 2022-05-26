@@ -1,13 +1,13 @@
 import { PatientManagerState } from './models';
 
 export const initialStatePatientManager: PatientManagerState = {
-  patientList: [],
+  patients: [],
   isLoadingPatients: false,
   hasErrorLoadingPatients: false,
   hasErrorAddingPatient: false,
   hasErrorEditingPatient: false,
   hasErrorRemovingPatient: false,
-  filteredPatientList: [],
+  filteredPatients: [],
   selectedPatient: null,
   hasSelectedPatient: false,
 };

@@ -11,27 +11,28 @@ import {
   RemovePatientPayload,
 } from './models';
 
-const requestPatientList = createAsyncThunk(
-  'patientManager/requestPatientList',
-  async (_, thunkAPI) => {
-    try {
-      const { userToken } = (thunkAPI.getState() as RootState).userManager;
-      const response = patientManagerAPI.requestPatientList(userToken);
-      return response;
-    } catch (error) {
-      thunkAPI.dispatch(patientManagerSlice.actions.resetPatientList());
-      console.log('Request Patient List Error: ', error);
-      return thunkAPI.rejectWithValue(error);
-    }
+const requestPatients = createAsyncThunk('patientManager/requestPatients', async (_, thunkAPI) => {
+  try {
+    const { userToken } = (thunkAPI.getState() as RootState).userManager;
+    const response = patientManagerAPI.requestPatients(userToken as string);
+    return response;
+  } catch (error) {
+    thunkAPI.dispatch(patientManagerSlice.actions.resetPatients());
+    console.log('Request Patients Error: ', error);
+    return thunkAPI.rejectWithValue(error);
   }
-);
+});
 
 const addPatient = createAsyncThunk(
   'patientManager/addPatient',
   async (addPatientPayload: AddPatientPayload, thunkAPI) => {
     try {
       const { user, userToken } = (thunkAPI.getState() as RootState).userManager;
-      const response = patientManagerAPI.addPatient(userToken, addPatientPayload, user.id);
+      const response = patientManagerAPI.addPatient(
+        userToken as string,
+        addPatientPayload,
+        user?.id as string
+      );
       return response;
     } catch (error) {
       console.log('Add Patient Error: ', error);
@@ -45,7 +46,7 @@ const removePatient = createAsyncThunk(
   async (removePatientPayload: RemovePatientPayload, thunkAPI) => {
     try {
       const { userToken } = (thunkAPI.getState() as RootState).userManager;
-      const response = patientManagerAPI.removePatient(userToken, removePatientPayload);
+      const response = patientManagerAPI.removePatient(userToken as string, removePatientPayload);
       return response;
     } catch (error) {
       console.log('Remove Patient Error:');
@@ -59,7 +60,11 @@ const editPatient = createAsyncThunk(
   async (editPatientPayload: EditPatientPayload, thunkAPI) => {
     try {
       const { user, userToken } = (thunkAPI.getState() as RootState).userManager;
-      const response = patientManagerAPI.editPatient(userToken, editPatientPayload, user.id);
+      const response = patientManagerAPI.editPatient(
+        userToken as string,
+        editPatientPayload,
+        user?.id as string
+      );
       return response;
     } catch (error) {
       console.log('Edit Patient Error: ', error);
@@ -73,33 +78,33 @@ export const patientManagerSlice = createSlice({
   initialState: initialStatePatientManager,
   reducers: {
     setPatients(state: PatientManagerState, action: PayloadAction<Patient[]>) {
-      state.patientList = action.payload;
+      state.patients = action.payload;
     },
 
     addPatient(state: PatientManagerState, action: PayloadAction<Patient>) {
-      state.patientList.push(action.payload);
+      state.patients.push(action.payload);
     },
 
     removePatient(state: PatientManagerState, action: PayloadAction<string>) {
-      state.patientList.filter((patient: Patient) => patient.id !== action.payload);
+      state.patients.filter((patient: Patient) => patient.id !== action.payload);
     },
 
     editPatient(state: PatientManagerState, action: PayloadAction<Patient>) {
-      state.patientList.filter((patient: Patient) =>
+      state.patients.filter((patient: Patient) =>
         patient.id === action.payload.id ? action.payload : patient
       );
     },
 
-    resetPatientList(state: PatientManagerState) {
-      state.patientList = initialStatePatientManager.patientList;
+    resetPatients(state: PatientManagerState) {
+      state.patients = initialStatePatientManager.patients;
     },
 
-    setFilteredPatientList(state: PatientManagerState, action: PayloadAction<Patient[]>) {
-      state.filteredPatientList = action.payload;
+    setFilteredPatients(state: PatientManagerState, action: PayloadAction<Patient[]>) {
+      state.filteredPatients = action.payload;
     },
 
-    resetFilteredPatientLisrt(state: PatientManagerState) {
-      state.filteredPatientList = [];
+    resetFilteredPatients(state: PatientManagerState) {
+      state.filteredPatients = [];
     },
 
     resetSelectedPatient(state: PatientManagerState) {
@@ -113,20 +118,20 @@ export const patientManagerSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Request Patient List
-    builder.addCase(requestPatientList.pending, (state: PatientManagerState) => {
+    // Request Patients
+    builder.addCase(requestPatients.pending, (state: PatientManagerState) => {
       state.isLoadingPatients = true;
     });
 
     builder.addCase(
-      requestPatientList.fulfilled,
+      requestPatients.fulfilled,
       (state: PatientManagerState, { payload }: PayloadAction<any>) => {
-        state.patientList = payload.data.results;
+        state.patients = payload.data.results;
       }
     );
 
     builder.addCase(
-      requestPatientList.rejected,
+      requestPatients.rejected,
       (state: PatientManagerState, action: PayloadAction<any>) => {
         state.hasErrorLoadingPatients = true;
       }
@@ -136,7 +141,7 @@ export const patientManagerSlice = createSlice({
     builder.addCase(
       addPatient.fulfilled,
       (state: PatientManagerState, { payload }: PayloadAction<any>) => {
-        state.patientList.push(payload.data.results);
+        state.patients.push(payload.data.results);
       }
     );
 
@@ -151,7 +156,7 @@ export const patientManagerSlice = createSlice({
     builder.addCase(
       editPatient.fulfilled,
       (state: PatientManagerState, { payload }: PayloadAction<any>) => {
-        state.patientList.filter((patient: Patient) =>
+        state.patients.filter((patient: Patient) =>
           patient.id === payload.id ? payload : patient
         );
       }
@@ -168,7 +173,7 @@ export const patientManagerSlice = createSlice({
     builder.addCase(
       removePatient.fulfilled,
       (state: PatientManagerState, { payload }: PayloadAction<any>) => {
-        state.patientList = state.patientList.filter(
+        state.patients = state.patients.filter(
           (patient: Patient) => patient.id !== payload.patientId
         );
       }

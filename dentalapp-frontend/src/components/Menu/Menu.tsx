@@ -1,43 +1,18 @@
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'components';
-import selectors, {
+import {
   selectIsLoggedIn,
   selectIsAdmin,
 } from 'store/slices/userManagerSlice/userManagerSelectors';
 import {
-  routePaths,
   RouteTypes,
   AllAccessRoutesTypes,
   OnlyAuthenticatedRoutesTypes,
   OnlyAdminRoutesTypes,
 } from 'routes/models';
+import { menuItems, preferredMenuOrder } from './models';
 import StyledMenu from './Menu.style';
-
-type MenuItemsValue = {
-  displayName: string;
-  route: string;
-};
-
-type MenuItems = {
-  [key in RouteTypes]: MenuItemsValue | null;
-};
-
-const menuItems: MenuItems = {
-  [AllAccessRoutesTypes.DEFAULT]: null,
-  [AllAccessRoutesTypes.HOME]: { displayName: 'Home', route: routePaths.HOME },
-  [AllAccessRoutesTypes.LOGIN]: { displayName: 'Login', route: routePaths.LOGIN },
-  [AllAccessRoutesTypes.NOT_FOUND_PAGE]: {
-    displayName: 'Not Found Page',
-    route: routePaths.NOT_FOUND_PAGE,
-  },
-  [OnlyAuthenticatedRoutesTypes.DOCTORS]: { displayName: 'Doctors', route: routePaths.DOCTORS },
-  [OnlyAuthenticatedRoutesTypes.PATIENTS]: { displayName: 'Patients', route: routePaths.PATIENTS },
-  [OnlyAuthenticatedRoutesTypes.ORDERS]: { displayName: 'Orders', route: routePaths.ORDERS },
-  [OnlyAdminRoutesTypes.ADMIN_PAGE]: { displayName: 'Admin', route: routePaths.ADMIN_PAGE },
-  [OnlyAuthenticatedRoutesTypes.LOGOUT]: { displayName: 'Logout', route: routePaths.LOGOUT },
-  [OnlyAuthenticatedRoutesTypes.PROFILE]: { displayName: 'Profile', route: routePaths.PROFILE },
-};
 
 const Menu = (): JSX.Element => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -58,48 +33,47 @@ const Menu = (): JSX.Element => {
     );
   };
 
+  const shouldKeyBeRendered = (key: RouteTypes): boolean => {
+    if ((key === AllAccessRoutesTypes.LOGIN && isLoggedIn) || key === AllAccessRoutesTypes.DEFAULT)
+      return false;
+    if (key in OnlyAuthenticatedRoutesTypes && !isLoggedIn) return false;
+    if (key in OnlyAdminRoutesTypes && !isAdmin) return false;
+    return true;
+  };
+
   const generateMenuList = (): JSX.Element[] => {
     const generatedList: JSX.Element[] = [];
     const allAccessRoutesKeys = [AllAccessRoutesTypes.HOME, AllAccessRoutesTypes.LOGIN];
     const onlyAuthenticatedRoutesKeys = [
-      OnlyAuthenticatedRoutesTypes.DOCTORS,
-      OnlyAuthenticatedRoutesTypes.PATIENTS,
       OnlyAuthenticatedRoutesTypes.ORDERS,
-      OnlyAuthenticatedRoutesTypes.LOGOUT,
       OnlyAuthenticatedRoutesTypes.PROFILE,
+      OnlyAuthenticatedRoutesTypes.LOGOUT,
     ];
 
-    const onlyAdminRoutesKeys = [OnlyAdminRoutesTypes.ADMIN_PAGE];
+    const onlyAdminRoutesKeys = [
+      OnlyAdminRoutesTypes.ADMIN_PAGE,
+      OnlyAdminRoutesTypes.DOCTORS,
+      // OnlyAdminRoutesTypes.PATIENTS,
+    ];
 
-    allAccessRoutesKeys.forEach((key: RouteTypes) => {
-      if (
-        (key === AllAccessRoutesTypes.LOGIN && isLoggedIn) ||
-        key === AllAccessRoutesTypes.DEFAULT
-      )
-        return '';
-      const item = generateMenuListItem(key);
-      if (!item) return '';
-      return generatedList.push(item);
+    const routesKeys = [
+      ...allAccessRoutesKeys,
+      ...onlyAuthenticatedRoutesKeys,
+      ...onlyAdminRoutesKeys,
+    ];
+
+    const orderedRoutesKeys = routesKeys.sort(
+      (firstKey: RouteTypes, secondKey: RouteTypes) =>
+        preferredMenuOrder[firstKey] - preferredMenuOrder[secondKey]
+    );
+
+    orderedRoutesKeys.forEach((key: RouteTypes) => {
+      if (!shouldKeyBeRendered(key)) return;
+      const menuItem = generateMenuListItem(key);
+      if (!menuItem) return;
+      generatedList.push(menuItem);
     });
 
-    onlyAuthenticatedRoutesKeys.forEach((key: RouteTypes) => {
-      if (
-        (key === OnlyAuthenticatedRoutesTypes.LOGOUT ||
-          key === OnlyAuthenticatedRoutesTypes.PROFILE) &&
-        !isLoggedIn
-      )
-        return '';
-      const item = generateMenuListItem(key);
-      if (!item) return '';
-      return generatedList.push(item);
-    });
-
-    onlyAdminRoutesKeys.forEach((key: RouteTypes) => {
-      if (key === OnlyAdminRoutesTypes.ADMIN_PAGE && !isAdmin) return '';
-      const item = generateMenuListItem(key);
-      if (!item) return '';
-      return generatedList.push(item);
-    });
     return generatedList;
   };
 

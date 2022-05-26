@@ -2,13 +2,13 @@ import { RootState } from 'store/store';
 import { ALERT_MANAGER_KEY } from './constants';
 import { AlertManagerState } from './models';
 
-export const selectIsAlertVisible = ({ alertManager: state }: RootState) => state.isVisible;
-export const selectAlertMessage = ({ alertManager: state }: RootState) => state.message;
-export const selectAlertType = ({ alertManager: state }: RootState) => state.type;
-export const selectAlertData = ({ alertManager: state }: RootState) => ({
-  message: state.message,
-  type: state.type,
-  isVisible: state.isVisible,
+export const selectIsAlertVisible = ({ alertManager }: RootState) => alertManager.isVisible;
+export const selectAlertMessage = ({ alertManager }: RootState) => alertManager.message;
+export const selectAlertType = ({ alertManager }: RootState) => alertManager.type;
+export const selectAlertData = ({ alertManager }: RootState) => ({
+  message: alertManager.message,
+  type: alertManager.type,
+  isVisible: alertManager.isVisible,
 });
 
 const userManagerSelectors = {

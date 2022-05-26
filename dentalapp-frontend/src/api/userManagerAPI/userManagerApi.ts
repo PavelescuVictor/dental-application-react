@@ -50,7 +50,7 @@ export const userAddProfile = async (
 ) =>
   axios({
     url: `${PROFILE_URL}${userId}/profile/`,
-    method: 'PUT',
+    method: 'POST',
     headers: {
       Authorization: `Token ${userToken}`,
     },

@@ -6,7 +6,7 @@ import {
 } from 'store/slices/patientManagerSlice/models';
 import { PATIENT_URL } from './constants';
 
-export const requestPatientList = async (userToken: string) =>
+export const requestPatients = async (userToken: string) =>
   axios({
     url: PATIENT_URL,
     method: 'GET',

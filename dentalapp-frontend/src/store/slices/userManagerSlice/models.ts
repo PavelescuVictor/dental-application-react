@@ -28,7 +28,7 @@ export interface UserManagerState {
   user: User | null;
   userToken: string | null;
   userTokenExpiry: string | null;
-  userProfile: string;
+  userProfile: string | null;
   hasErrorLoggingIn: boolean;
   hasErrorLoggingOut: boolean;
   hasErrorRegistering: boolean;

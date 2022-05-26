@@ -2,6 +2,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from 'store/rootReducer';
 import { doctorManagerAPI } from 'api';
+import { DoctorsDashboardTabs } from 'modules/doctorsDashboard/models';
 import { initialStateDoctorManager, DOCTOR_MANAGER_KEY } from './constants';
 import {
   DoctorManagerState,
@@ -11,20 +12,17 @@ import {
   RemoveDoctorPayload,
 } from './models';
 
-const requestDoctorList = createAsyncThunk(
-  'doctorManager/requestDoctorList',
-  async (_, thunkAPI) => {
-    try {
-      const { userToken } = (thunkAPI.getState() as RootState).userManager;
-      const response = doctorManagerAPI.requestDoctorList(userToken);
-      return response;
-    } catch (error) {
-      thunkAPI.dispatch(doctorManagerSlice.actions.resetDoctorList());
-      console.log('Request Doctor List Error: ', error);
-      return thunkAPI.rejectWithValue(error);
-    }
+const requestDoctors = createAsyncThunk('doctorManager/requestDoctors', async (_, thunkAPI) => {
+  try {
+    const { userToken } = (thunkAPI.getState() as RootState).userManager;
+    const response = doctorManagerAPI.requestDoctors(userToken);
+    return response;
+  } catch (error) {
+    thunkAPI.dispatch(doctorManagerSlice.actions.resetDoctors());
+    console.log('Request Doctors Error: ', error);
+    return thunkAPI.rejectWithValue(error);
   }
-);
+});
 
 const addDoctor = createAsyncThunk(
   'doctorManager/addDoctor',
@@ -73,33 +71,33 @@ export const doctorManagerSlice = createSlice({
   initialState: initialStateDoctorManager,
   reducers: {
     setDoctors(state: DoctorManagerState, action: PayloadAction<Doctor[]>) {
-      state.doctorList = action.payload;
+      state.doctors = action.payload;
     },
 
     addDoctor(state: DoctorManagerState, action: PayloadAction<Doctor>) {
-      state.doctorList.push(action.payload);
+      state.doctors.push(action.payload);
     },
 
-    removeDoctor(state: DoctorManagerState, action: PayloadAction<string>) {
-      state.doctorList = state.doctorList.filter((doctor: Doctor) => doctor.id !== action.payload);
+    removeDoctor(state: DoctorManagerState, action: PayloadAction<number>) {
+      state.doctors = state.doctors.filter((doctor: Doctor) => doctor.id !== action.payload);
     },
 
     editDoctor(state: DoctorManagerState, action: PayloadAction<Doctor>) {
-      state.doctorList = state.doctorList.filter((doctor: Doctor) =>
+      state.doctors = state.doctors.filter((doctor: Doctor) =>
         doctor.id === action.payload.id ? action.payload : doctor
       );
     },
 
-    resetDoctorList(state: DoctorManagerState) {
-      state.doctorList = initialStateDoctorManager.doctorList;
+    resetDoctors(state: DoctorManagerState) {
+      state.doctors = initialStateDoctorManager.doctors;
     },
 
     setFilteredDoctorList(state: DoctorManagerState, action: PayloadAction<Doctor[]>) {
-      state.filteredDoctorList = action.payload;
+      state.filteredDoctors = action.payload;
     },
 
-    resetFilteredDoctorLisrt(state: DoctorManagerState) {
-      state.filteredDoctorList = [];
+    resetFilteredDoctors(state: DoctorManagerState) {
+      state.filteredDoctors = [];
     },
 
     resetSelectedDoctor(state: DoctorManagerState) {
@@ -107,28 +105,38 @@ export const doctorManagerSlice = createSlice({
       state.hasSelectedDoctor = false;
     },
 
-    setSelectedDoctor(state: DoctorManagerState, action: PayloadAction<Doctor>) {
+    setSelectedDoctor(state: DoctorManagerState, action: PayloadAction<number>) {
       state.selectedDoctor = action.payload;
       state.hasSelectedDoctor = true;
     },
+
+    setSelectedDashboardTab(
+      state: DoctorManagerState,
+      action: PayloadAction<DoctorsDashboardTabs>
+    ) {
+      state.selectedDashboardTab = action.payload;
+    },
   },
   extraReducers: (builder) => {
-    // Request Doctor List
-    builder.addCase(requestDoctorList.pending, (state: DoctorManagerState) => {
+    // Request Doctors
+    builder.addCase(requestDoctors.pending, (state: DoctorManagerState) => {
       state.isLoadingDoctors = true;
     });
 
     builder.addCase(
-      requestDoctorList.fulfilled,
+      requestDoctors.fulfilled,
       (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
-        state.doctorList = payload.data.results;
+        state.doctors = payload.data.results;
+        state.isLoadingDoctors = false;
+        state.hasErrorLoadingDoctors = false;
       }
     );
 
     builder.addCase(
-      requestDoctorList.rejected,
+      requestDoctors.rejected,
       (state: DoctorManagerState, action: PayloadAction<any>) => {
         state.hasErrorLoadingDoctors = true;
+        state.isLoadingDoctors = false;
       }
     );
 
@@ -136,7 +144,7 @@ export const doctorManagerSlice = createSlice({
     builder.addCase(
       addDoctor.fulfilled,
       (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
-        state.doctorList.push(payload.data.results);
+        state.doctors.push(payload.data.results);
       }
     );
 
@@ -148,7 +156,7 @@ export const doctorManagerSlice = createSlice({
     builder.addCase(
       editDoctor.fulfilled,
       (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
-        state.doctorList.filter((doctor: Doctor) => (doctor.id === payload.id ? payload : doctor));
+        state.doctors.filter((doctor: Doctor) => (doctor.id === payload.id ? payload : doctor));
       }
     );
 
@@ -163,9 +171,7 @@ export const doctorManagerSlice = createSlice({
     builder.addCase(
       removeDoctor.fulfilled,
       (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
-        state.doctorList = state.doctorList.filter(
-          (doctor: Doctor) => doctor.id !== payload.doctorId
-        );
+        state.doctors = state.doctors.filter((doctor: Doctor) => doctor.id !== payload.doctorId);
       }
     );
 
@@ -182,4 +188,11 @@ export const doctorManagerReducer = doctorManagerSlice.reducer;
 
 export const doctorManagerActions = {
   ...doctorManagerSlice.actions,
+};
+
+export const doctorManagerAsyncThunk = {
+  requestDoctors,
+  addDoctor,
+  removeDoctor,
+  editDoctor,
 };

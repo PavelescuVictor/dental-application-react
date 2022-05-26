@@ -23,13 +23,13 @@ export interface Patient {
 }
 
 export interface PatientManagerState {
-  patientList: Patient[];
+  patients: Patient[];
   isLoadingPatients: boolean;
   hasErrorLoadingPatients: boolean;
   hasErrorAddingPatient: boolean;
   hasErrorEditingPatient: boolean;
   hasErrorRemovingPatient: boolean;
-  filteredPatientList: Patient[];
+  filteredPatients: Patient[];
   selectedPatient: Patient | null;
   hasSelectedPatient: boolean;
 }

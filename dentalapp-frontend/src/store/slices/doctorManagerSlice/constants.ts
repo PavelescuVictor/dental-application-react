@@ -1,15 +1,17 @@
+import { DoctorsDashboardTabs } from 'modules/doctorsDashboard/models';
 import { DoctorManagerState } from './models';
 
 export const initialStateDoctorManager: DoctorManagerState = {
-  doctorList: [],
+  doctors: [],
   isLoadingDoctors: false,
   hasErrorLoadingDoctors: false,
   hasErrorAddingDoctor: false,
   hasErrorEditingDoctor: false,
   hasErrorRemovingDoctor: false,
-  filteredDoctorList: [],
+  filteredDoctors: [],
   selectedDoctor: null,
   hasSelectedDoctor: false,
+  selectedDashboardTab: DoctorsDashboardTabs.LIST,
 };
 
 export const DOCTOR_MANAGER_KEY = 'doctorManager';

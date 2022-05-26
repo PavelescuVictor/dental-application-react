@@ -1,7 +1,7 @@
 import { AlertManagerState } from './models';
 
 // Alert Default Render Time in ms. Ex: 5000 = 5 seconds
-const alertDefaultTime = 5000;
+export const ALERT_DEFAULT_TIME = 5000;
 // alertBoxTypes: {
 //     LIST: 'LIST',
 //     OVERRIDE: 'OVERRIDE',

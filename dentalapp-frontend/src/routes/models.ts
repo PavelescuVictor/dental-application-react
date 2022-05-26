@@ -21,8 +21,6 @@ export const allAccessRoutePaths: AllAccessRoutePaths = {
 // Only authenticated
 
 export enum OnlyAuthenticatedRoutesTypes {
-  DOCTORS = 'DOCTORS',
-  PATIENTS = 'PATIENTS',
   ORDERS = 'ORDERS',
   PROFILE = 'PROFILE',
   LOGOUT = 'LOGOUT',
@@ -33,8 +31,6 @@ export type OnlyAuthenticatedRoutePaths = {
 };
 
 export const onlyAuthenticatedRoutePaths: OnlyAuthenticatedRoutePaths = {
-  [OnlyAuthenticatedRoutesTypes.DOCTORS]: '/doctors',
-  [OnlyAuthenticatedRoutesTypes.PATIENTS]: '/patients',
   [OnlyAuthenticatedRoutesTypes.ORDERS]: '/orders',
   [OnlyAuthenticatedRoutesTypes.PROFILE]: '/profile',
   [OnlyAuthenticatedRoutesTypes.LOGOUT]: '/logout',
@@ -44,6 +40,11 @@ export const onlyAuthenticatedRoutePaths: OnlyAuthenticatedRoutePaths = {
 
 export enum OnlyAdminRoutesTypes {
   ADMIN_PAGE = 'ADMIN_PAGE',
+  DOCTORS = 'DOCTORS',
+  // PATIENTS = 'PATIENTS',
+  ADD_DOCTOR = 'ADD_DOCTOR',
+  // ADD_PATIENT = 'ADD_PATIENT',
+  ADD_ORDER = 'ADD_ORDER',
 }
 
 export type OnlyAdminRoutePaths = {
@@ -52,6 +53,11 @@ export type OnlyAdminRoutePaths = {
 
 export const onlyAdminRoutePaths: OnlyAdminRoutePaths = {
   [OnlyAdminRoutesTypes.ADMIN_PAGE]: '/admin-page',
+  [OnlyAdminRoutesTypes.DOCTORS]: '/doctors',
+  // [OnlyAuthenticatedRoutesTypes.PATIENTS]: '/patients',
+  [OnlyAdminRoutesTypes.ADD_DOCTOR]: '/add-doctor',
+  // [OnlyAdminRoutesTypes.ADD_PATIENT]: '/add-patient',
+  [OnlyAdminRoutesTypes.ADD_ORDER]: '/add-order',
 };
 
 export type RoutePaths = AllAccessRoutePaths & OnlyAuthenticatedRoutePaths & OnlyAdminRoutePaths;
@@ -74,10 +80,13 @@ export const RouteAccesLevels = {
   [AllAccessRoutesTypes.HOME]: RouteAccessTypes.ALL_ACCESS,
   [AllAccessRoutesTypes.LOGIN]: RouteAccessTypes.ALL_ACCESS,
   [AllAccessRoutesTypes.NOT_FOUND_PAGE]: RouteAccessTypes.ALL_ACCESS,
-  [OnlyAuthenticatedRoutesTypes.DOCTORS]: RouteAccessTypes.ONLY_AUTHENTICATED,
-  [OnlyAuthenticatedRoutesTypes.PATIENTS]: RouteAccessTypes.ONLY_AUTHENTICATED,
   [OnlyAuthenticatedRoutesTypes.ORDERS]: RouteAccessTypes.ONLY_AUTHENTICATED,
   [OnlyAuthenticatedRoutesTypes.LOGOUT]: RouteAccessTypes.ONLY_AUTHENTICATED,
   [OnlyAuthenticatedRoutesTypes.PROFILE]: RouteAccessTypes.ONLY_AUTHENTICATED,
+  [OnlyAdminRoutesTypes.DOCTORS]: RouteAccessTypes.ONLY_ADMINS,
+  // [OnlyAdminRoutesTypes.PATIENTS]: RouteAccessTypes.ONLY_ADMINS,
   [OnlyAdminRoutesTypes.ADMIN_PAGE]: RouteAccessTypes.ONLY_ADMINS,
+  [OnlyAdminRoutesTypes.ADD_DOCTOR]: RouteAccessTypes.ONLY_ADMINS,
+  // [OnlyAdminRoutesTypes.ADD_PATIENT]: RouteAccessTypes.ONLY_ADMINS,
+  [OnlyAdminRoutesTypes.ADD_ORDER]: RouteAccessTypes.ONLY_ADMINS,
 };

@@ -31,12 +31,13 @@ const login = createAsyncThunk(
   async (loginPayload: LoginPayload, thunkAPI) => {
     try {
       const response = await userManagerAPI.userLogin(loginPayload);
-      const { token: userToken, user, tokenExpiry: userTokenExpiry } = response.data;
 
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('userToken', userToken);
-      localStorage.setItem('userTokenExpiry', userTokenExpiry);
-      return transformLoginResponsePayload(response.data);
+      const transformedData = transformLoginResponsePayload(response.data);
+
+      localStorage.setItem('user', JSON.stringify(transformedData.user));
+      localStorage.setItem('userToken', transformedData.userToken);
+      localStorage.setItem('userTokenExpiry', transformedData.userTokenExpiry);
+      return transformedData;
     } catch (error: any) {
       localStorage.removeItem('user');
       localStorage.removeItem('userToken');
@@ -55,7 +56,6 @@ const logout = createAsyncThunk('userManager/logout', async (_, thunkAPI) => {
   try {
     const { userToken } = (thunkAPI.getState() as RootState).userManager;
     const response = await userManagerAPI.userLogout(userToken);
-    console.log(response);
 
     localStorage.removeItem('user');
     localStorage.removeItem('userToken');
@@ -206,10 +206,10 @@ export const userManagerSlice = createSlice({
     },
 
     resetUserData(state: UserManagerState) {
-      state.user = initialStateUserManager.user;
-      state.userToken = initialStateUserManager.userToken;
-      state.userTokenExpiry = initialStateUserManager.userTokenExpiry;
-      state.userProfile = initialStateUserManager.userProfile;
+      state.user = null;
+      state.userToken = null;
+      state.userTokenExpiry = null;
+      state.userProfile = null;
     },
   },
 
@@ -252,10 +252,10 @@ export const userManagerSlice = createSlice({
     });
 
     builder.addCase(logout.fulfilled, (state: UserManagerState, _) => {
-      state.user = initialStateUserManager.user;
-      state.userToken = initialStateUserManager.userToken;
-      state.userTokenExpiry = initialStateUserManager.userTokenExpiry;
-      state.userProfile = initialStateUserManager.userProfile;
+      state.user = null;
+      state.userToken = null;
+      state.userTokenExpiry = null;
+      state.userProfile = null;
       state.isLoggedIn = false;
     });
 

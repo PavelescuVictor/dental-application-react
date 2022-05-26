@@ -17,18 +17,16 @@ const withAccessControl = (
 
     switch (accessLevel) {
       case RouteAccessTypes.ALL_ACCESS:
-        console.log(accessLevel, Component);
         return <Component {...props} />;
         break;
       case RouteAccessTypes.ONLY_AUTHENTICATED:
-        console.log(accessLevel, Component);
-        if (isLoggedIn) return <Component {...props} />;
-        return <Navigate to={routePaths.LOGIN} />;
+        if (!isLoggedIn) <Navigate to={routePaths.LOGIN} />;
+        return <Component {...props} />;
         break;
       case RouteAccessTypes.ONLY_ADMINS:
-        console.log(accessLevel, Component);
-        if (isAdmin) return <Component {...props} />;
-        return <Navigate to={routePaths.HOME} />;
+        if (!isLoggedIn) return <Navigate to={routePaths.LOGIN} />;
+        if (!isAdmin) return <Navigate to={routePaths.HOME} />;
+        return <Component {...props} />;
         break;
       default:
         break;

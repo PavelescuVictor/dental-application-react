@@ -8,6 +8,8 @@ const StyledFooter = styled.div`
     return css`
       height: 12vh;
       background: ${palette.secondary};
+      position: relative;
+      z-index: 10;
 
       .footer__content {
         height: 100%;
@@ -17,6 +19,7 @@ const StyledFooter = styled.div`
         grid-template-rows: 2fr 1fr;
         justify-content: center;
         align-items: center;
+        gap: 10px;
       }
 
       .content__links {
@@ -37,15 +40,23 @@ const StyledFooter = styled.div`
           font-size: 2.2rem;
           transition: padding 0.2s ease-in, box-shadow 0.2s ease-in, background 0s ease-in,
             border-radius 0.2s ease-in, margin 0.2s ease-in;
-        }
 
-        a:hover {
-          background: ${palette.basic.white};
-          color: ${palette.secondary};
-          padding: 20px 15px 0px 15px;
-          margin: 0px 10px;
-          border-radius: 10px;
-          box-shadow: 0px 6px 0px 0px ${palette.basic.white};
+          svg path {
+            fill: ${palette.basic.white};
+          }
+
+          &:hover {
+            background: ${palette.basic.white};
+            color: ${palette.secondary};
+            padding: 20px 15px 0px 15px;
+            margin: 0px 10px;
+            border-radius: 10px;
+            box-shadow: 0px 6px 0px 0px ${palette.basic.white};
+
+            svg path {
+              fill: ${palette.secondary};
+            }
+          }
         }
       }
 
@@ -55,6 +66,7 @@ const StyledFooter = styled.div`
         color: ${palette.basic.white};
         cursor: default;
         user-select: none;
+        line-height: 1rem;
       }
     `;
   }}

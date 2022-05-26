@@ -2,8 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import DoctorSerializer, PatientSerializer, OrderSerializer, OrderTypeSerializer, OrderStatusSerializer, OrderColorSerializer, OrderTypeEntrySerializer
-from .models import Doctor, Patient, Order, OrderType, OrderStatus, OrderColor, OrderTypeEntry
+from .serializers import DoctorSerializer, DoctorDetailsSerializer, PatientSerializer, PatientDetailsSerializer, OrderSerializer, OrderTypeSerializer, OrderStatusSerializer, OrderColorSerializer, OrderTypeEntrySerializer
+from .models import Doctor, DoctorDetails, Patient, PatientDetails, Order, OrderType, OrderStatus, OrderColor, OrderTypeEntry
 from .permissions import ReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 import django_filters
@@ -22,6 +22,18 @@ class DoctorFilter(django_filters.FilterSet):
             'id': ['exact'],
             'firstName': ['exact', 'icontains'],
             'lastName': ['exact', 'icontains'],
+        }
+
+class DoctorDetailsFilter(django_filters.FilterSet):
+    """
+    A simple Filter class for the Doctor Details model.
+    """
+
+    class Meta:
+        model = DoctorDetails
+        fields = {
+            'id': ['exact'],
+            'doctorId': ['exact'],
             'cabinet': ['exact', 'icontains'],
             'phone': ['exact'],
         }
@@ -38,6 +50,18 @@ class PatientFilter(django_filters.FilterSet):
             'id': ['exact'],
             'firstName': ['exact', 'icontains'],
             'lastName': ['exact', 'icontains'],
+        }
+
+class PatientDetailsFilter(django_filters.FilterSet):
+    """
+    A simple Filter class for the Patient Details model.
+    """
+
+    class Meta:
+        model = PatientDetails
+        fields = {
+            'id': ['exact'],
+            'patientId': ['exact'],
             'phone': ['exact'],
         }
 
@@ -53,6 +77,8 @@ class OrderFilter(django_filters.FilterSet):
             'id': ['exact'],
             'doctor': ['exact'],
             'patient': ['exact'],
+            'redo': ['exact'],
+            'paid': ['exact'],
         }
 
 
@@ -66,7 +92,6 @@ class OrderTypeFilter(django_filters.FilterSet):
         fields = {
             'id': ['exact'],
             'type': ['exact', 'icontains'],
-            'ppu': ['exact'],
         }
 
 
@@ -109,9 +134,8 @@ class OrderTypeEntryFilter(django_filters.FilterSet):
             'color': ['exact'],
             'type': ['exact'],
             'status': ['exact'],
-            'redo': ['exact'],
-            'paid': ['exact'],
             'warranty': ['exact'],
+            'ppu': ['exact'],
         }
 
 # Createing view sets.
@@ -127,7 +151,20 @@ class DoctorViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_class = DoctorFilter
-    filterset_fields = ['id', 'firstName', 'lastName', 'cabinet', 'phone']
+    filterset_fields = ['id', 'firstName', 'lastName']
+    # authentication_classes = [TokenAuthentication, ]
+
+class DoctorDetailsViewSet(viewsets.ModelViewSet):
+    """
+    A simple ViewSet for viewing and editing doctors details.
+    """
+
+    queryset = DoctorDetails.objects.all()
+    serializer_class = DoctorDetailsSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = DoctorDetailsFilter
+    filterset_fields = ['id', 'doctorId', 'cabinet', 'phone']
     # authentication_classes = [TokenAuthentication, ]
 
 
@@ -141,7 +178,21 @@ class PatientViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_class = PatientFilter
-    filterset_fields = ['id', 'firstName', 'lastName', 'phone']
+    filterset_fields = ['id', 'firstName', 'lastName']
+    # authentication_classes = [TokenAuthentication, ]
+
+
+class PatientDetailsViewSet(viewsets.ModelViewSet):
+    """
+    A simple ViewSet for viewing and editing patients details.
+    """
+
+    queryset = PatientDetails.objects.all()
+    serializer_class = PatientDetailsSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = PatientDetailsFilter
+    filterset_fields = ['id', 'patientId', 'phone']
     # authentication_classes = [TokenAuthentication, ]
 
 
@@ -154,7 +205,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_class = OrderFilter
-    filterset_fields = ['id', 'doctor', 'patient']
+    filterset_fields = ['id', 'doctor', 'patient', 'paid', 'redo']
     # authentication_classes = [TokenAuthentication, ]
     """
     def list(self, request):
@@ -181,7 +232,7 @@ class OrderTypeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, ReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_class = OrderTypeFilter
-    filterset_fields = ['id', 'type', 'ppu']
+    filterset_fields = ['id', 'type']
     # authentication_classes = [TokenAuthentication, ]
 
 
@@ -223,7 +274,7 @@ class OrderTypeEntryViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = OrderTypeEntryFilter
     filterset_fields = [
-        'id', 'order', 'color', 'type', 'status', 'redo', 'paid', 'warranty'
+        'id', 'order', 'color', 'type', 'status', 'warranty', 'ppu'
     ]
 
     def create(self, request, *args, **kwargs):

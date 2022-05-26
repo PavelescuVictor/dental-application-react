@@ -1,35 +1,37 @@
+import { DoctorsDashboardTabs } from 'modules/doctorsDashboard/models';
+
 export type AddDoctorPayload = {
   firstName: string;
   lastName: string;
-  cabinet: string;
-  phone: string;
 };
 
 export type EditDoctorPayload = {
   id: string;
   firstName?: string;
   lastName?: string;
-  cabinet?: string;
-  phone?: string;
 };
 
 export type RemoveDoctorPayload = { id: string };
 
 export interface Doctor {
-  id: string;
+  id: number;
   firstName: string;
   lastName: string;
-  cabinet: string;
+  createdAt: string;
+  createdBy: number;
+  updatedAt: string;
+  updatedBy: string;
 }
 
 export interface DoctorManagerState {
-  doctorList: Doctor[];
+  doctors: Doctor[];
   isLoadingDoctors: boolean;
   hasErrorLoadingDoctors: boolean;
   hasErrorAddingDoctor: boolean;
   hasErrorEditingDoctor: boolean;
   hasErrorRemovingDoctor: boolean;
-  filteredDoctorList: Doctor[];
-  selectedDoctor: Doctor | null;
+  filteredDoctors: Doctor[];
+  selectedDoctor: number | null;
   hasSelectedDoctor: boolean;
+  selectedDashboardTab: DoctorsDashboardTabs;
 }

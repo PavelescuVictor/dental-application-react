@@ -1,34 +1,73 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
+import { Navigate, useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 import { withAccessControl } from 'hocs';
-import { RouteAccessTypes } from 'routes/models';
+import { RouteAccessTypes, routePaths } from 'routes/models';
+import { doctorManagerActions } from 'store/slices/doctorManagerSlice/doctorManager';
+import { getSelectedDashboardTab } from 'store/slices/doctorManagerSlice/doctorManagerSelectors';
 import { useAppDispatch } from 'store/store';
-import { alertManagerActions } from 'store/slices/alertManagerSlice/alertManager';
-import { AlertTypes } from 'store/slices/alertManagerSlice/models';
-import svgAssets from 'assets/images';
-import StyledDoctors from './DoctorsDashboard.style';
+import { Background } from 'components';
+import { DoctorsList, DoctorsEdit, DoctorsDetails, DoctorsNavbar } from './components';
+import StyledDoctorsDashboard from './DoctorsDashboard.style';
+import { DoctorsDashboardTabs } from './models';
 
-const { Background } = svgAssets;
-
-const Doctors = (): JSX.Element => {
+const DoctorsDashboard = (): JSX.Element => {
   const dispatch = useAppDispatch();
+  const activeTab = useSelector(getSelectedDashboardTab);
+  const navigate = useNavigate();
+  const handleTabChange = (newTab: DoctorsDashboardTabs) => {
+    dispatch(doctorManagerActions.setSelectedDashboardTab(newTab));
+  };
 
   useEffect(() => {
-    const alert = {
-      alertMessage: 'Doctors Page Loaded',
-      alertType: AlertTypes.INFO,
-    };
-    dispatch(alertManagerActions.setAlertData(alert));
+    dispatch(doctorManagerActions.setSelectedDashboardTab(DoctorsDashboardTabs.LIST));
+    navigate(routePaths.DOCTORS);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const renderContent = useCallback((currentTab: DoctorsDashboardTabs): JSX.Element => {
+    let contentToRender = <></>;
+
+    switch (currentTab) {
+      case DoctorsDashboardTabs.LIST:
+        contentToRender = (
+          <div className="dashboard__list">
+            <DoctorsList />
+          </div>
+        );
+        break;
+      case DoctorsDashboardTabs.DETAILS:
+        contentToRender = (
+          <div className="dashboard__details">
+            <DoctorsDetails />
+          </div>
+        );
+        break;
+      case DoctorsDashboardTabs.EDIT:
+        contentToRender = (
+          <div className="dashboard__edit">
+            <DoctorsEdit />
+          </div>
+        );
+        break;
+      case DoctorsDashboardTabs.ADD:
+        contentToRender = <Navigate to="/add-doctor" />;
+        break;
+      default:
+        break;
+    }
+    return contentToRender;
   }, []);
 
   return (
-    <StyledDoctors>
-      <div className="doctors-page">
-        <div className="background">
-          <Background />
-        </div>
+    <StyledDoctorsDashboard className="dashboard">
+      <Background />
+      <div className="dashboard__content">
+        <DoctorsNavbar handleTabChange={handleTabChange} />
+        <div className="content__wrapper">{renderContent(activeTab)}</div>
       </div>
-    </StyledDoctors>
+    </StyledDoctorsDashboard>
   );
 };
 
-export default withAccessControl(Doctors, RouteAccessTypes.ONLY_AUTHENTICATED);
+export default withAccessControl(DoctorsDashboard, RouteAccessTypes.ONLY_ADMINS);

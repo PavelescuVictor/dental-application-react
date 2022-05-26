@@ -37,8 +37,8 @@ const StyledScrollTop = styled.div`
 
       .arrow-up {
         transition: transform 0.4s ease-in-out;
-        height: 100%;
-        width: 100%;
+        font-size: 40px;
+
         path {
           fill: ${palette.secondary};
         }

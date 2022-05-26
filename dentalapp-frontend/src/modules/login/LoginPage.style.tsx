@@ -3,50 +3,81 @@ import styled, { css } from 'styled-components';
 const StyledLoginPage = styled.div`
   ${(props) => {
     const {
-      theme: { palette },
+      theme: { palette, typography },
     } = props;
     return css`
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-
-      .login__content {
-        height: 100vh;
-        width: 100%;
-      }
+      height: 100vh;
 
       .content__form {
-        height: 100%;
-        padding: calc(8vh + 90px) 90px 90px 90px;
+        height: 100vh;
+        width: 80%;
+        margin: auto;
+        display: flex;
+        align-items: center;
       }
 
       .form__wrapper {
-        height: 100%;
+        width: 100%;
         display: grid;
-        grid-template-rows: 1fr auto 1fr;
-        padding: 30px 0px;
-        justify-content: center;
-        align-items: center;
+        grid-template-columns: 1rf 1fr;
+        grid-gap: 100px;
 
-        p {
-          font-size: 1.8rem;
+        .form-title {
           text-align: center;
-          animation: form__wrapper__p__scale 0.3s ease-in-out forwards;
+          font-family: ${typography.font.primary};
+          font-size: 1.8rem;
         }
 
-        .form {
-          width: 100%;
+        .form-labels {
+          font-family: ${typography.font.primary};
+        }
+
+        form {
           display: grid;
-          margin: auto;
           grid-template-rows: auto auto auto 1fr;
           align-content: space-between;
           animation: form__wrapper__form__width 0.4s ease-in-out forwards;
         }
 
         .form__buttons {
+          width: fit-content;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
           justify-self: center;
+
+          .submit-button,
+          .reset-button {
+            display: inline-block;
+            width: 7.5em;
+            margin: auto;
+            font-size: 20px;
+            padding: 5px 5px;
+            background: -webkit-linear-gradient(-90deg, #f1f1f1 50%, ${palette.secondary} 50%);
+            background-size: 6.5em 6.5em;
+            border-radius: 50px;
+            margin: 10px;
+            transition: background-position 0.6s ease, color 0.2s ease-in;
+            cursor: pointer;
+            color: ${palette.secondary};
+            box-shadow: none;
+            text-transform: none;
+            font-family: ${typography.font.primary};
+
+            &:hover {
+              background-position: 0px -70px;
+              color: ${palette.basic.white};
+            }
+          }
+
+          button:disabled {
+            background: ${palette.basic.white};
+            border: 3px solid #bbbbbb;
+            color: #bbbbbb;
+
+            &:hover {
+              color: #bbbbbb;
+            }
+          }
         }
       }
 

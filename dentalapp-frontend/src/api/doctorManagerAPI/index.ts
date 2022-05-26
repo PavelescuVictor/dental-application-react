@@ -1,7 +1,7 @@
-import { requestDoctorList, addDoctor, removeDoctor, editDoctor } from './doctorManagerApi';
+import { requestDoctors, addDoctor, removeDoctor, editDoctor } from './doctorManagerApi';
 
 const doctorManagerAPI = {
-  requestDoctorList,
+  requestDoctors,
   addDoctor,
   removeDoctor,
   editDoctor,

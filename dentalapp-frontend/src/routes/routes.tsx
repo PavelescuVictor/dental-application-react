@@ -66,21 +66,9 @@ const allAccessRoutes: RouteItemType[] = [
 const onlyAuthenticatedRoutes: RouteItemType[] = [
   {
     exact: true,
-    path: routePaths.DOCTORS,
-    routeType: OnlyAuthenticatedRoutesTypes.DOCTORS,
-    component: lazy(() => import('modules/doctorsDashboard')),
-  },
-  {
-    exact: true,
-    path: routePaths.PATIENTS,
-    routeType: OnlyAuthenticatedRoutesTypes.PATIENTS,
-    component: lazy(() => import('modules/patients')),
-  },
-  {
-    exact: true,
     path: routePaths.ORDERS,
     routeType: OnlyAuthenticatedRoutesTypes.ORDERS,
-    component: lazy(() => import('modules/orders')),
+    component: lazy(() => import('modules/ordersDashboard')),
   },
   {
     exact: true,
@@ -103,6 +91,54 @@ const onlyAdminRoutes: RouteItemType[] = [
     routeType: OnlyAdminRoutesTypes.ADMIN_PAGE,
     component: lazy(() => import('modules/admin')),
   },
+  {
+    exact: true,
+    path: routePaths.DOCTORS,
+    routeType: OnlyAdminRoutesTypes.DOCTORS,
+    component: lazy(() => import('modules/doctorsDashboard')),
+  },
+  // {
+  //   exact: true,
+  //   path: routePaths.PATIENTS,
+  //   routeType: OnlyAdminRoutesTypes.PATIENTS,
+  //   component: lazy(() => import('modules/patients')),
+  // },
+  {
+    exact: true,
+    path: routePaths.ADD_DOCTOR,
+    routeType: OnlyAdminRoutesTypes.ADD_DOCTOR,
+    component: lazy(() => import('modules/addDoctor')),
+  },
+  // {
+  //   exact: true,
+  //   path: routePaths.ADD_PATIENT,
+  //   routeType: OnlyAdminRoutesTypes.ADD_PATIENT,
+  //   component: lazy(() => import('modules/addPatient')),
+  // },
+  {
+    exact: true,
+    path: routePaths.ADD_ORDER,
+    routeType: OnlyAdminRoutesTypes.ADD_ORDER,
+    component: lazy(() => import('modules/addOrder')),
+  },
+  // {
+  //   exact: true,
+  //   path: routePaths.ADD_COLOR,
+  //   routeType: OnlyAdminRoutesTypes.ADD_COLOR,
+  //   component: lazy(() => import('modules/addColor')),
+  // },
+  // {
+  //   exact: true,
+  //   path: routePaths.ADD_STATUS,
+  //   routeType: OnlyAdminRoutesTypes.ADD_STATUS,
+  //   component: lazy(() => import('modules/addStatus')),
+  // },
+  // {
+  //   exact: true,
+  //   path: routePaths.ADD_PROFILE,
+  //   routeType: OnlyAdminRoutesTypes.ADD_PROFILE,
+  //   component: lazy(() => import('modules/addProfile')),
+  // },
 ];
 
 const routes: RoutesList = [...allAccessRoutes, ...onlyAuthenticatedRoutes, ...onlyAdminRoutes];

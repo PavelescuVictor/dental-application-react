@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from 'components';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import StyledScrollTop from './ScrollTop.style';
 
 const ScrollTop = (): JSX.Element => {
@@ -29,7 +30,7 @@ const ScrollTop = (): JSX.Element => {
       {isVisible && (
         <StyledScrollTop>
           <Button className="scroll-top-button" action={scrollTop}>
-            <ExpandLessIcon className="arrow-up" />
+            <FontAwesomeIcon className="arrow-up" icon={faChevronUp} />
           </Button>
         </StyledScrollTop>
       )}
