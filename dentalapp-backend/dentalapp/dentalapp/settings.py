@@ -51,15 +51,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'restapi',
     'userauth',
+    'doctors',
+    'patients',
+    'orders',
+    'departments',
+    'apidocs',
     'rest_framework',
     'knox',
     'phonenumber_field',
     'corsheaders',
     'django_filters',
     'django_rest_passwordreset',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'coreapi',
+    'drf_yasg', 
 ]
 
 MIDDLEWARE = [

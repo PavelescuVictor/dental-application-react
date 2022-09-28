@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Typography, Box, Input, FormControl, InputLabel, FormHelperText } from '@mui/material';
 import svgAssets from 'assets/images';
@@ -50,6 +50,11 @@ const AddDoctor = (): JSX.Element => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(alertManagerActions.resetAlert());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const checkIsValid = () => {
     const validationResult: any = Object.entries(formValues).reduce((acc, [key, value]) => {

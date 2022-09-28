@@ -24,6 +24,23 @@ const requestDoctors = createAsyncThunk('doctorManager/requestDoctors', async (_
   }
 });
 
+const requestSelectedDoctorDetails = createAsyncThunk(
+  'doctorManager/requestSelectedDoctorDetails',
+  async (_, thunkAPI) => {
+    try {
+      console.log('here');
+      const { userToken } = (thunkAPI.getState() as RootState).userManager;
+      console.log('here');
+      const response = doctorManagerAPI.requestSelectedDoctorDetails(userToken);
+      return response;
+    } catch (error) {
+      thunkAPI.dispatch(doctorManagerSlice.actions.resetSelectedDoctorDetails());
+      console.log('Request Selected Doctors Error: ', error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 const addDoctor = createAsyncThunk(
   'doctorManager/addDoctor',
   async (addDoctorPayload: AddDoctorPayload, thunkAPI) => {
@@ -92,6 +109,10 @@ export const doctorManagerSlice = createSlice({
       state.doctors = initialStateDoctorManager.doctors;
     },
 
+    resetSelectedDoctorDetails(state: DoctorManagerState) {
+      state.selectedDoctorDetails = initialStateDoctorManager.selectedDoctorDetails;
+    },
+
     setFilteredDoctorList(state: DoctorManagerState, action: PayloadAction<Doctor[]>) {
       state.filteredDoctors = action.payload;
     },
@@ -137,6 +158,28 @@ export const doctorManagerSlice = createSlice({
       (state: DoctorManagerState, action: PayloadAction<any>) => {
         state.hasErrorLoadingDoctors = true;
         state.isLoadingDoctors = false;
+      }
+    );
+
+    // Request Selected Doctor Details
+    builder.addCase(requestSelectedDoctorDetails.pending, (state: DoctorManagerState) => {
+      state.isLoadingSelectedDoctorDetails = true;
+    });
+
+    builder.addCase(
+      requestSelectedDoctorDetails.fulfilled,
+      (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
+        state.selectedDoctorDetails = payload.data.results;
+        state.isLoadingSelectedDoctorDetails = false;
+        state.hasErrorLoadingSelectedDoctorDetails = false;
+      }
+    );
+
+    builder.addCase(
+      requestSelectedDoctorDetails.rejected,
+      (state: DoctorManagerState, action: PayloadAction<any>) => {
+        state.hasErrorLoadingSelectedDoctorDetails = true;
+        state.isLoadingSelectedDoctorDetails = false;
       }
     );
 
@@ -192,6 +235,7 @@ export const doctorManagerActions = {
 
 export const doctorManagerAsyncThunk = {
   requestDoctors,
+  requestSelectedDoctorDetails,
   addDoctor,
   removeDoctor,
   editDoctor,

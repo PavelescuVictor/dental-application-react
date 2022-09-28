@@ -1,7 +1,14 @@
-import { requestDoctors, addDoctor, removeDoctor, editDoctor } from './doctorManagerApi';
+import {
+  requestDoctors,
+  requestSelectedDoctorDetails,
+  addDoctor,
+  removeDoctor,
+  editDoctor,
+} from './doctorManagerApi';
 
 const doctorManagerAPI = {
   requestDoctors,
+  requestSelectedDoctorDetails,
   addDoctor,
   removeDoctor,
   editDoctor,

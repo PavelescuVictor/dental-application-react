@@ -2,8 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import DoctorSerializer, DoctorDetailsSerializer, PatientSerializer, PatientDetailsSerializer, OrderSerializer, OrderTypeSerializer, OrderStatusSerializer, OrderColorSerializer, OrderTypeEntrySerializer
-from .models import Doctor, DoctorDetails, Patient, PatientDetails, Order, OrderType, OrderStatus, OrderColor, OrderTypeEntry
+from .serializers import DoctorSerializer, DoctorDetailsSerializer, OrderSerializer, OrderStepTypeSerializer, OrderStatusSerializer, OrderColorSerializer, OrderStepSerializer
+from .models import Doctor, DoctorDetails, Order, OrderStepType, OrderStatus, OrderColor, OrderStep
 from .permissions import ReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 import django_filters
@@ -13,7 +13,7 @@ import django_filters
 
 class DoctorFilter(django_filters.FilterSet):
     """
-    A simple Filter class for the Doctor model.
+    Filter class for the Doctor model.
     """
 
     class Meta:
@@ -24,51 +24,52 @@ class DoctorFilter(django_filters.FilterSet):
             'lastName': ['exact', 'icontains'],
         }
 
+
 class DoctorDetailsFilter(django_filters.FilterSet):
     """
-    A simple Filter class for the Doctor Details model.
+    Filter class for the Doctor Details model.
     """
 
     class Meta:
         model = DoctorDetails
         fields = {
             'id': ['exact'],
-            'doctorId': ['exact'],
+            'doctor': ['exact'],
             'cabinet': ['exact', 'icontains'],
             'phone': ['exact'],
         }
 
 
-class PatientFilter(django_filters.FilterSet):
-    """
-    A simple Filter class for the Patient model.
-    """
+# class PatientFilter(django_filters.FilterSet):
+#     """
+#     Filter class for the Patient model.
+#     """
 
-    class Meta:
-        model = Patient
-        fields = {
-            'id': ['exact'],
-            'firstName': ['exact', 'icontains'],
-            'lastName': ['exact', 'icontains'],
-        }
+#     class Meta:
+#         model = Patient
+#         fields = {
+#             'id': ['exact'],
+#             'firstName': ['exact', 'icontains'],
+#             'lastName': ['exact', 'icontains'],
+#         }
 
-class PatientDetailsFilter(django_filters.FilterSet):
-    """
-    A simple Filter class for the Patient Details model.
-    """
+# class PatientDetailsFilter(django_filters.FilterSet):
+#     """
+#     Filter class for the Patient Details model.
+#     """
 
-    class Meta:
-        model = PatientDetails
-        fields = {
-            'id': ['exact'],
-            'patientId': ['exact'],
-            'phone': ['exact'],
-        }
+#     class Meta:
+#         model = PatientDetails
+#         fields = {
+#             'id': ['exact'],
+#             'patientId': ['exact'],
+#             'phone': ['exact'],
+#         }
 
 
 class OrderFilter(django_filters.FilterSet):
     """
-    A simple Filter class for the Order model.
+    Filter class for the Order model.
     """
 
     class Meta:
@@ -76,28 +77,28 @@ class OrderFilter(django_filters.FilterSet):
         fields = {
             'id': ['exact'],
             'doctor': ['exact'],
-            'patient': ['exact'],
+            'patientName': ['exact'],
             'redo': ['exact'],
             'paid': ['exact'],
         }
 
 
-class OrderTypeFilter(django_filters.FilterSet):
+class OrderStepTypeFilter(django_filters.FilterSet):
     """
-    A simple Filter class for the OrderType model.
+    Filter class for the OrderStepType model.
     """
 
     class Meta:
-        model = OrderType
+        model = OrderStepType
         fields = {
             'id': ['exact'],
-            'type': ['exact', 'icontains'],
+            'stepType': ['exact', 'icontains'],
         }
 
 
 class OrderStatusFilter(django_filters.FilterSet):
     """
-    A simple Filter class for the OrderStatus model.
+    Filter class for the OrderStatus model.
     """
 
     class Meta:
@@ -110,7 +111,7 @@ class OrderStatusFilter(django_filters.FilterSet):
 
 class OrderColorFilter(django_filters.FilterSet):
     """
-    A simple Filter class for the OrderColor model.
+    Filter class for the OrderColor model.
     """
 
     class Meta:
@@ -121,29 +122,30 @@ class OrderColorFilter(django_filters.FilterSet):
         }
 
 
-class OrderTypeEntryFilter(django_filters.FilterSet):
+class OrderStepFilter(django_filters.FilterSet):
     """
-    A simple Filter class for the OrderTypeEntry model.
+    Filter class for the OrderStep model.
     """
 
     class Meta:
-        model = OrderTypeEntry
+        model = OrderStep
         fields = {
             'id': ['exact'],
             'order': ['exact'],
             'color': ['exact'],
-            'type': ['exact'],
+            'stepType': ['exact'],
             'status': ['exact'],
             'warranty': ['exact'],
             'ppu': ['exact'],
         }
 
-# Createing view sets.
+
+# Creating view sets.
 
 
 class DoctorViewSet(viewsets.ModelViewSet):
     """
-    A simple ViewSet for viewing and editing doctors.
+    ViewSet for viewing and editing the doctor entries
     """
 
     queryset = Doctor.objects.all()
@@ -156,7 +158,7 @@ class DoctorViewSet(viewsets.ModelViewSet):
 
 class DoctorDetailsViewSet(viewsets.ModelViewSet):
     """
-    A simple ViewSet for viewing and editing doctors details.
+    ViewSet for viewing and editing the doctor details entries
     """
 
     queryset = DoctorDetails.objects.all()
@@ -168,78 +170,80 @@ class DoctorDetailsViewSet(viewsets.ModelViewSet):
     # authentication_classes = [TokenAuthentication, ]
 
 
-class PatientViewSet(viewsets.ModelViewSet):
-    """
-    A simple ViewSet for viewing and editing patients.
-    """
+# class PatientViewSet(viewsets.ModelViewSet):
+#     """
+#     ViewSet for viewing and editing patients.
+#     """
 
-    queryset = Patient.objects.all()
-    serializer_class = PatientSerializer
-    permission_classes = [IsAuthenticated]
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = PatientFilter
-    filterset_fields = ['id', 'firstName', 'lastName']
-    # authentication_classes = [TokenAuthentication, ]
+#     queryset = Patient.objects.all()
+#     serializer_class = PatientSerializer
+#     permission_classes = [IsAuthenticated]
+#     filter_backends = [DjangoFilterBackend]
+#     filterset_class = PatientFilter
+#     filterset_fields = ['id', 'firstName', 'lastName']
+#     # authentication_classes = [TokenAuthentication, ]
 
 
-class PatientDetailsViewSet(viewsets.ModelViewSet):
-    """
-    A simple ViewSet for viewing and editing patients details.
-    """
+# class PatientDetailsViewSet(viewsets.ModelViewSet):
+#     """
+#     ViewSet for viewing and editing patients details.
+#     """
 
-    queryset = PatientDetails.objects.all()
-    serializer_class = PatientDetailsSerializer
-    permission_classes = [IsAuthenticated]
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = PatientDetailsFilter
-    filterset_fields = ['id', 'patientId', 'phone']
-    # authentication_classes = [TokenAuthentication, ]
+#     queryset = PatientDetails.objects.all()
+#     serializer_class = PatientDetailsSerializer
+#     permission_classes = [IsAuthenticated]
+#     filter_backends = [DjangoFilterBackend]
+#     filterset_class = PatientDetailsFilter
+#     filterset_fields = ['id', 'patientId', 'phone']
+#     # authentication_classes = [TokenAuthentication, ]
 
 
 class OrderViewSet(viewsets.ModelViewSet):
     """
-    A simple ViewSet for viewing and editing orders.
+    ViewSet for viewing and editing order entries
     """
+
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_class = OrderFilter
-    filterset_fields = ['id', 'doctor', 'patient', 'paid', 'redo']
+    filterset_fields = ['id', 'doctor', 'patientName', 'paid', 'redo']
     # authentication_classes = [TokenAuthentication, ]
-    """
-    def list(self, request):
-        print("list")
-        queryset = Order.objects.all()
-        serializer = OrderSerializer(queryset, many=True)
-        return Response(serializer.data)
 
-    def retrieve(self, request, pk=None):
-        print("list1")
-        queryset = Order.objects.all()
-        order = get_object_or_404(queryset, pk=pk)
-        serializer = OrderSerializer(order)
-        return Response(serializer.data)
-    """
+    # def list(self, request):
+    #     print("list")
+    #     queryset = Order.objects.all()
+    #     serializer = OrderSerializer(queryset, many=True)
+    #     return Response(serializer.data)
+
+    # def retrieve(self, request, pk=None):
+    #     print("list1")
+    #     queryset = Order.objects.all()
+    #     order = get_object_or_404(queryset, pk=pk)
+    #     serializer = OrderSerializer(order)
+    #     return Response(serializer.data)
 
 
-class OrderTypeViewSet(viewsets.ModelViewSet):
+class OrderStepTypeViewSet(viewsets.ModelViewSet):
     """
-    A simple ViewSet for viewing and editing orders.
+    A simple ViewSet for viewing and editing order step type entries.
     """
-    queryset = OrderType.objects.all()
-    serializer_class = OrderTypeSerializer
+
+    queryset = OrderStepType.objects.all()
+    serializer_class = OrderStepTypeSerializer
     permission_classes = [IsAuthenticated, ReadOnly]
     filter_backends = [DjangoFilterBackend]
-    filterset_class = OrderTypeFilter
-    filterset_fields = ['id', 'type']
+    filterset_class = OrderStepTypeFilter
+    filterset_fields = ['id', 'stepType']
     # authentication_classes = [TokenAuthentication, ]
 
 
 class OrderStatusViewSet(viewsets.ModelViewSet):
     """
-    A simple ViewSet for viewing orders.
+    ViewSet for viewing and editing order status entries
     """
+
     queryset = OrderStatus.objects.all()
     serializer_class = OrderStatusSerializer
     permission_classes = [IsAuthenticated, ReadOnly]
@@ -251,8 +255,9 @@ class OrderStatusViewSet(viewsets.ModelViewSet):
 
 class OrderColorViewSet(viewsets.ModelViewSet):
     """
-    A simple ViewSet for viewing colors,
+    ViewSet for viewing and editing order color entries
     """
+
     queryset = OrderColor.objects.all()
     serializer_class = OrderColorSerializer
     permission_classes = [IsAuthenticated, ReadOnly]
@@ -264,17 +269,18 @@ class OrderColorViewSet(viewsets.ModelViewSet):
     # authentication_classes = [TokenAuthentication, ]
 
 
-class OrderTypeEntryViewSet(viewsets.ModelViewSet):
+class OrderStepViewSet(viewsets.ModelViewSet):
     """
-    A simple ViewSet for viewing and editing orders.
+    ViewSet for viewing and editing order step entries
     """
-    queryset = OrderTypeEntry.objects.all()
-    serializer_class = OrderTypeEntrySerializer
+
+    queryset = OrderStep.objects.all()
+    serializer_class = OrderStepSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
-    filterset_class = OrderTypeEntryFilter
+    filterset_class = OrderStepFilter
     filterset_fields = [
-        'id', 'order', 'color', 'type', 'status', 'warranty', 'ppu'
+        'id', 'order', 'step', 'stepOrder', 'status', 'warranty', 'ppu', 'unitCount'
     ]
 
     def create(self, request, *args, **kwargs):

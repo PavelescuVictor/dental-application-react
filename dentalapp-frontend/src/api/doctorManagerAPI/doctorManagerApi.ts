@@ -15,6 +15,15 @@ export const requestDoctors = async (userToken: string) =>
     },
   });
 
+export const requestSelectedDoctorDetails = async (userToken: string) =>
+  axios({
+    url: `${DOCTOR_URL}/details`,
+    method: 'GET',
+    headers: {
+      Authorization: `Token ${userToken}`,
+    },
+  });
+
 export const addDoctor = async (userToken: string, payload: AddDoctorPayload, userId: string) =>
   axios({
     url: `${DOCTOR_URL}`,

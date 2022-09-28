@@ -4,9 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList, faUser, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Button } from 'components';
 import { getSelectedDashboardTab } from 'store/slices/doctorManagerSlice/doctorManagerSelectors';
+import { RouteAccessTypes } from 'routes/models';
 import StyledDoctorsNavbar from './DoctorsNavbar.style';
 import { DoctorsDashboardTabs } from '../../models';
 import { DoctorsNavbarProps } from './models';
+import { withAccessControlNavbarTab } from 'hocs/index';
 
 const DoctorsNavbar = ({ handleTabChange }: DoctorsNavbarProps) => {
   const currentTab = useSelector(getSelectedDashboardTab);
@@ -18,6 +20,7 @@ const DoctorsNavbar = ({ handleTabChange }: DoctorsNavbarProps) => {
         },
         icon: faList,
         itemName: 'List',
+        accessLevel: RouteAccessTypes.ONLY_ADMINS,
       },
       [DoctorsDashboardTabs.DETAILS]: {
         action: () => {
@@ -25,6 +28,7 @@ const DoctorsNavbar = ({ handleTabChange }: DoctorsNavbarProps) => {
         },
         icon: faUser,
         itemName: 'Details',
+        accessLevel: RouteAccessTypes.ONLY_ADMINS,
       },
       [DoctorsDashboardTabs.EDIT]: {
         action: () => {
@@ -32,6 +36,7 @@ const DoctorsNavbar = ({ handleTabChange }: DoctorsNavbarProps) => {
         },
         icon: faEdit,
         itemName: 'Edit',
+        accessLevel: RouteAccessTypes.ONLY_ADMINS,
       },
       [DoctorsDashboardTabs.ADD]: {
         action: () => {
@@ -39,6 +44,7 @@ const DoctorsNavbar = ({ handleTabChange }: DoctorsNavbarProps) => {
         },
         icon: faPlus,
         itemName: 'Add',
+        accessLevel: RouteAccessTypes.ONLY_ADMINS,
       },
     }),
     []
@@ -51,14 +57,17 @@ const DoctorsNavbar = ({ handleTabChange }: DoctorsNavbarProps) => {
       DoctorsDashboardTabs.EDIT,
       DoctorsDashboardTabs.ADD,
     ];
-    return generatedNavbarItemKeys.map((navbarItemKey: DoctorsDashboardTabs) => (
-      <Button key={navbarItemKey} action={navbarItems[navbarItemKey].action}>
-        <li className={currentTab === navbarItemKey ? 'focused' : ''}>
-          <FontAwesomeIcon icon={navbarItems[navbarItemKey].icon} />
-          <p>{navbarItems[navbarItemKey].itemName}</p>
-        </li>
-      </Button>
-    ));
+    return generatedNavbarItemKeys.map((navbarItemKey: DoctorsDashboardTabs) => {
+      const tabItem = (
+        <Button key={navbarItemKey} action={navbarItems[navbarItemKey].action}>
+          <li className={currentTab === navbarItemKey ? 'focused' : ''}>
+            <FontAwesomeIcon icon={navbarItems[navbarItemKey].icon} />
+            <p>{navbarItems[navbarItemKey].itemName}</p>
+          </li>
+        </Button>
+      );
+      return withAccessControlNavbarTab(tabItem, navbarItems[navbarItemKey].accessLevel);
+    });
   };
 
   return (

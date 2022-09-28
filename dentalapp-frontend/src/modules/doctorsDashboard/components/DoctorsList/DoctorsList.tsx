@@ -31,15 +31,29 @@ const DoctorsList = () => {
         alertMessage: 'Doctors data received',
         alertType: AlertTypes.SUCCESS,
       };
+      dispatch(alertManagerActions.clearHideInterval());
       dispatch(alertManagerActions.setAlertData(alert));
-      setTimeout(() => dispatch(alertManagerActions.setIsVisible(false)), ALERT_DEFAULT_TIME);
+      dispatch(
+        alertManagerActions.setHideInterval({
+          hideIntervalId: setTimeout(() => {
+            dispatch(alertManagerActions.resetAlert());
+          }, ALERT_DEFAULT_TIME),
+        })
+      );
     } catch (error: any) {
       const alert = {
         alertMessage: 'Error while loading doctors data',
         alertType: AlertTypes.ERROR,
       };
+      dispatch(alertManagerActions.clearHideInterval());
       dispatch(alertManagerActions.setAlertData(alert));
-      setTimeout(() => dispatch(alertManagerActions.setIsVisible(false)), ALERT_DEFAULT_TIME);
+      dispatch(
+        alertManagerActions.setHideInterval({
+          hideIntervalId: setTimeout(() => {
+            dispatch(alertManagerActions.resetAlert());
+          }, ALERT_DEFAULT_TIME),
+        })
+      );
     }
   }, []);
 

@@ -4,61 +4,90 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList, faUser, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Button } from 'components';
 import { getSelectedDashboardTab } from 'store/slices/orderManagerSlice/orderManagerSelectors';
+import { selectIsAdmin } from 'store/slices/userManagerSlice/userManagerSelectors';
 import StyledOrdersNavbar from './OrdersNavbar.style';
-import { OrdersDashboardTabs } from '../../models';
+import {
+  AllAccessOrdersTabsTypes,
+  OnlyAdminOrdersTabsTypes,
+  ordersTabsDisplayNames,
+  OrdersTabsTypes,
+} from '../../models';
 import { OrdersNavbarProps } from './models';
 
 const OrdersNavbar = ({ handleTabChange }: OrdersNavbarProps) => {
   const currentTab = useSelector(getSelectedDashboardTab);
+  const isAdmin = useSelector(selectIsAdmin);
   const navbarItems = useMemo(
     () => ({
-      [OrdersDashboardTabs.LIST]: {
+      [AllAccessOrdersTabsTypes.LIST]: {
         action: () => {
-          handleTabChange(OrdersDashboardTabs.LIST);
+          handleTabChange(AllAccessOrdersTabsTypes.LIST);
         },
         icon: faList,
-        itemName: 'List',
+        itemName: ordersTabsDisplayNames.LIST,
       },
-      [OrdersDashboardTabs.DETAILS]: {
+      [AllAccessOrdersTabsTypes.DETAILS]: {
         action: () => {
-          handleTabChange(OrdersDashboardTabs.DETAILS);
+          handleTabChange(AllAccessOrdersTabsTypes.DETAILS);
         },
         icon: faUser,
-        itemName: 'Details',
+        itemName: ordersTabsDisplayNames.DETAILS,
       },
-      [OrdersDashboardTabs.EDIT]: {
+      [OnlyAdminOrdersTabsTypes.EDIT]: {
         action: () => {
-          handleTabChange(OrdersDashboardTabs.EDIT);
+          handleTabChange(OnlyAdminOrdersTabsTypes.EDIT);
         },
         icon: faEdit,
-        itemName: 'Edit',
+        itemName: ordersTabsDisplayNames.EDIT,
       },
-      [OrdersDashboardTabs.ADD]: {
+      [OnlyAdminOrdersTabsTypes.ADD]: {
         action: () => {
-          handleTabChange(OrdersDashboardTabs.ADD);
+          handleTabChange(OnlyAdminOrdersTabsTypes.ADD);
         },
         icon: faPlus,
-        itemName: 'Add',
+        itemName: ordersTabsDisplayNames.ADD,
       },
     }),
     []
   );
 
-  const renderNavbarItems = () => {
-    const generatedNavbarItemKeys = [
-      OrdersDashboardTabs.LIST,
-      OrdersDashboardTabs.DETAILS,
-      OrdersDashboardTabs.EDIT,
-      OrdersDashboardTabs.ADD,
-    ];
-    return generatedNavbarItemKeys.map((navbarItemKey: OrdersDashboardTabs) => (
+  const generateMenuListItem = (navbarItemKey: OrdersTabsTypes): JSX.Element | null => {
+    const menuItem = navbarItems[navbarItemKey];
+    if (!menuItem) return null;
+    return (
       <Button key={navbarItemKey} action={navbarItems[navbarItemKey].action}>
         <li className={currentTab === navbarItemKey ? 'focused' : ''}>
           <FontAwesomeIcon icon={navbarItems[navbarItemKey].icon} />
           <p>{navbarItems[navbarItemKey].itemName}</p>
         </li>
       </Button>
-    ));
+    );
+  };
+
+  const shouldTabBeRendered = (key: OrdersTabsTypes): boolean => {
+    if (key in OnlyAdminOrdersTabsTypes && !isAdmin) return false;
+    return true;
+  };
+
+  const renderNavbarItems = () => {
+    const generatedList: JSX.Element[] = [];
+
+    const allAccessNavbarItemKeys = [
+      AllAccessOrdersTabsTypes.LIST,
+      AllAccessOrdersTabsTypes.DETAILS,
+    ];
+    const onlyAdminNavbarItemKeys = [OnlyAdminOrdersTabsTypes.ADD, OnlyAdminOrdersTabsTypes.EDIT];
+
+    const routesKeys = [...allAccessNavbarItemKeys, ...onlyAdminNavbarItemKeys];
+
+    routesKeys.forEach((key: OrdersTabsTypes) => {
+      if (!shouldTabBeRendered(key)) return;
+      const menuItem = generateMenuListItem(key);
+      if (!menuItem) return;
+      generatedList.push(menuItem);
+    });
+
+    return generatedList;
   };
 
   return (

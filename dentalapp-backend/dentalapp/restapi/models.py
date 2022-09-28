@@ -18,10 +18,6 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 """
 User = user_model()
 
-
-# Create your models here.
-
-
 class Doctor(models.Model):
     firstName = models.CharField(max_length=100, verbose_name="First Name")
     lastName = models.CharField(max_length=100, verbose_name="Last Name")
@@ -45,8 +41,10 @@ class Doctor(models.Model):
     def __str__(self):
         return self.fullName()
 
+
+
 class DoctorDetails(models.Model):
-    doctorId = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=False, related_name="+")
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=False, related_name="+")
     cabinet = models.TextField(max_length=300, verbose_name="Cabinet")
     phone = PhoneNumberField(null=False, blank=False,
                              unique=True, verbose_name="Numar Telefon")
@@ -66,53 +64,55 @@ class DoctorDetails(models.Model):
 
 
 
-class Patient(models.Model):
-    firstName = models.CharField(max_length=80)
-    lastName = models.CharField(max_length=80)
-    phone = PhoneNumberField(null=False, blank=False, unique=True)
-    details = models.TextField(max_length=300)
-    createdBy = models.ForeignKey(User,
-                                  on_delete=models.SET_NULL, null=True,
-                                  related_name='+')
-    updatedBy = models.ForeignKey(User,
-                                  on_delete=models.SET_NULL, null=True,
-                                  related_name='+')
-    createdAt = models.DateTimeField(auto_now_add=True)
-    updatedAt = models.DateTimeField(auto_now=True)
+# class Patient(models.Model):
+#     firstName = models.CharField(max_length=80)
+#     lastName = models.CharField(max_length=80)
+#     createdBy = models.ForeignKey(User,
+#                                   on_delete=models.SET_NULL, null=True,
+#                                   related_name='+')
+#     updatedBy = models.ForeignKey(User,
+#                                   on_delete=models.SET_NULL, null=True,
+#                                   related_name='+')
+#     createdAt = models.DateTimeField(auto_now_add=True)
+#     updatedAt = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        ordering: ['firstName', 'lastName']
-        verbose_name = "Patient"
-        verbose_name_plural = "Patients"
+#     class Meta:
+#         ordering: ['firstName', 'lastName']
+#         verbose_name = "Patient"
+#         verbose_name_plural = "Patients"
 
-    def fullName(self):
-        return f'{self.firstName} {self.lastName}'
+#     def fullName(self):
+#         return f'{self.firstName} {self.lastName}'
 
-    def __str__(self):
-        return self.fullName()
+#     def __str__(self):
+#         return self.fullName()
+#
+#
+#
+# class PatientDetails(models.Model):
+#     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, null=False, related_name="+")
+#     phone = PhoneNumberField(null=False, blank=False, unique=True)
+#     details = models.TextField(max_length=300)
+#     createdBy = models.ForeignKey(User,
+#                                   on_delete=models.SET_NULL, null=True,
+#                                   related_name='+')
+#     updatedBy = models.ForeignKey(User,
+#                                   on_delete=models.SET_NULL, null=True,
+#                                   related_name='+')
+#     createdAt = models.DateTimeField(auto_now_add=True)
+#     updatedAt = models.DateTimeField(auto_now=True)
 
-class PatientDetails(models.Model):
-    patientId = models.ForeignKey(Patient, on_delete=models.CASCADE, null=False, related_name="+")
-    phone = PhoneNumberField(null=False, blank=False, unique=True)
-    details = models.TextField(max_length=300)
-    createdBy = models.ForeignKey(User,
-                                  on_delete=models.SET_NULL, null=True,
-                                  related_name='+')
-    updatedBy = models.ForeignKey(User,
-                                  on_delete=models.SET_NULL, null=True,
-                                  related_name='+')
-    createdAt = models.DateTimeField(auto_now_add=True)
-    updatedAt = models.DateTimeField(auto_now=True)
+#     class Meta:
+#         ordering: ['patientId']
+#         verbose_name = "Patient Details"
+#         verbose_name_plural = "Patient Details"
 
-    class Meta:
-        ordering: ['patientId']
-        verbose_name = "Patient Details"
-        verbose_name_plural = "Patient Details"
 
 
 class Order(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT)
-    patient = models.ForeignKey(Patient, on_delete=models.PROTECT)
+    # patient = models.ForeignKey(Patient, on_delete=models.PROTECT)
+    patientName = models.TextField(null=False, blank=False, unique=False)
     redo = models.BooleanField(default=False)
     paid = models.BooleanField(default=False)
     createdBy = models.ForeignKey(User,
@@ -130,8 +130,9 @@ class Order(models.Model):
         verbose_name_plural = "Orders"
 
 
-class OrderType(models.Model):
-    type = models.TextField(null=False, blank=False, unique=True)
+
+class OrderColor(models.Model):
+    color = models.TextField(null=False, blank=False, unique=True)
     createdBy = models.ForeignKey(User,
                                   on_delete=models.SET_NULL, null=True,
                                   related_name='+')
@@ -142,12 +143,33 @@ class OrderType(models.Model):
     updatedAt = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.type
+        return self.color
 
     class Meta:
-        ordering = ['type']
-        verbose_name = "Order Type"
-        verbose_name_plural = "Order Types"
+        ordering = ['color']
+        verbose_name = "Order Color"
+        verbose_name_plural = "Order Colors"
+
+
+
+class OrderStepType(models.Model):
+    stepType = models.TextField(null=False, blank=False, unique=True)
+    createdBy = models.ForeignKey(User,
+                                  on_delete=models.SET_NULL, null=True,
+                                  related_name='+')
+    updatedBy = models.ForeignKey(User,
+                                  on_delete=models.SET_NULL, null=True,
+                                  related_name='+')
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.stepType
+
+    class Meta:
+        ordering = ['stepType']
+        verbose_name = "Order Step Type"
+        verbose_name_plural = "Order Step Types"
 
 
 class OrderStatus(models.Model):
@@ -169,38 +191,19 @@ class OrderStatus(models.Model):
         verbose_name = "Order Status"
         verbose_name_plural = "Order Status"
 
-
-class OrderColor(models.Model):
-    color = models.TextField(null=False, blank=True, unique=True)
-    createdBy = models.ForeignKey(User,
-                                  on_delete=models.SET_NULL, null=True,
-                                  related_name='+')
-    updatedBy = models.ForeignKey(User,
-                                  on_delete=models.SET_NULL, null=True,
-                                  related_name='+')
-    createdAt = models.DateTimeField(auto_now_add=True)
-    updatedAt = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.color
-
-    class Meta:
-        ordering = ['color']
-        verbose_name = "Order Color"
-        verbose_name_plural = "Order Colors"
-
-
-class OrderTypeEntry(models.Model):
+class OrderStep(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    color = models.ForeignKey(OrderColor, on_delete=models.PROTECT)
-    type = models.ForeignKey(OrderType, on_delete=models.PROTECT)
-    status = models.ForeignKey(
-        OrderStatus, on_delete=models.PROTECT)
+    stepType = models.ForeignKey(OrderStepType, on_delete=models.PROTECT)
+    stepOrder = models.PositiveIntegerField(
+        default=0, validators=[MinValueValidator(1)], blank=False)
+    status = models.ForeignKey(OrderStatus, on_delete=models.PROTECT)
+    color = models.ForeignKey(OrderColor, on_delete=models.PROTECT, null=True, blank=True)
     unitCount = models.PositiveIntegerField(
-        default=1, validators=[MinValueValidator(1)], blank=False)
+        default=1, validators=[MinValueValidator(1)], null=False, blank=False)
     warranty = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(0)], blank=False)
-    ppu = models.PositiveIntegerField(null=False, blank=False)
+        default=0, validators=[MinValueValidator(0)], null=False, blank=False)
+    ppu = models.PositiveIntegerField(
+        default=0, validators=[MinValueValidator(0)], null=False, blank=False)
     createdBy = models.ForeignKey(User,
                                   on_delete=models.SET_NULL, null=True,
                                   related_name='+')
@@ -211,6 +214,6 @@ class OrderTypeEntry(models.Model):
     updatedAt = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['order', 'type', 'color']
-        verbose_name = "Order Type Entry"
-        verbose_name_plural = "Order Type Entries"
+        ordering = ['order', 'stepType', 'color', 'status']
+        verbose_name = "Order Step"
+        verbose_name_plural = "Order Steps"

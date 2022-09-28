@@ -1,6 +1,6 @@
-import { ElementType, useEffect, useCallback } from 'react';
+import { ElementType } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { RouteAccessTypes, routePaths } from 'routes/models';
 import {
   selectIsLoggedIn,

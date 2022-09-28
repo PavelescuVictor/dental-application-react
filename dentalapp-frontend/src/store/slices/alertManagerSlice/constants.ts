@@ -21,6 +21,7 @@ export const initialStateAlertManager: AlertManagerState = {
   message: '',
   type: null,
   isVisible: false,
+  hideIntervalId: null,
 };
 
 export const ALERT_MANAGER_KEY = 'alertManager';

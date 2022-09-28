@@ -3,6 +3,11 @@ name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
+[[source]]
+url = "https://pypi.org/simple/"
+verify_ssl = true
+name = "pypi-690"
+
 [dev-packages]
 djangorestframework = "*"
 django-filter = "*"
@@ -17,8 +22,6 @@ Markdown = "*"
 
 [packages]
 asgiref = "==3.2.10"
-cffi = "==1.14.3"
-cryptography = "==3.3.2"
 django-cors-headers = "==3.5.0"
 django-filter = "==2.4.0"
 django-phonenumber-field = "==5.0.0"
@@ -26,12 +29,18 @@ django-rest-knox = "==4.1.0"
 django-rest-passwordreset = "==1.1.0"
 djangorestframework = "==3.12.1"
 phonenumbers = "==8.12.11"
-psycopg2 = "==2.8.6"
 pycparser = "==2.20"
 pytz = "==2020.1"
 six = "==1.15.0"
 sqlparse = "==0.4.1"
 Django = "==3.1.2"
+pyyaml = "*"
+cffi = "*"
+cryptography = "*"
+psycopg2 = "*"
+uritemplate = "*"
+drf-yasg = "*"
+coreapi = "*"
 
 [requires]
 python_version = "3.8"

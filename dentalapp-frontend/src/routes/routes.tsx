@@ -79,8 +79,8 @@ const onlyAuthenticatedRoutes: RouteItemType[] = [
   {
     exact: true,
     path: routePaths.PROFILE,
-    routeType: OnlyAuthenticatedRoutesTypes.PROFILE,
-    component: () => null,
+    routeType: AllAccessRoutesTypes.NOT_FOUND_PAGE,
+    component: lazy(() => import('modules/notFoundPage')),
   },
 ];
 

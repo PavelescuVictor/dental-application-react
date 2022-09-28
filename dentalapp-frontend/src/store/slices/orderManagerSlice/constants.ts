@@ -1,4 +1,4 @@
-import { OrdersDashboardTabs } from 'modules/ordersDashboard/models';
+import { AllAccessOrdersTabsTypes } from 'modules/ordersDashboard/models';
 import { OrderManagerState } from './models';
 
 export const initialStateOrderManager: OrderManagerState = {
@@ -11,7 +11,7 @@ export const initialStateOrderManager: OrderManagerState = {
   filteredOrders: [],
   selectedOrder: null,
   hasSelectedOrder: false,
-  selectedDashboardTab: OrdersDashboardTabs.LIST,
+  selectedDashboardTab: AllAccessOrdersTabsTypes.LIST,
 };
 
 export const ORDER_MANAGER_KEY = 'orderManager';

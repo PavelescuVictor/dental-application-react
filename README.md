@@ -4,6 +4,33 @@
 
 Web application helping dental tehnicians manage data about doctos, pacients, orders using and authentication system.
 
+## How to run?:
+
+**Backend flow:**
+
+      (Use "pipenv freeze > requirements.txt" to create the requirements.txt file)
+      (Use "pipenv requirements > requirements.txt to create the requirements.txt file)
+      - cd dentalapp-backend
+      - pipenv install -r requirements.txt (detecting the requirements.txt file)
+      - pipenv shell
+      - cd dentalapp-backend
+      - python manage.py makemigrations
+      - python manage.py migrate
+      - python manage.py createsuperuser
+            - insert email and password
+      - python manage.py runserver
+
+**Frontend flow:**
+
+      - cd dentalapp-frontend
+      - yarn install
+      - yarn start
+
+**Spinning docker containers:**
+
+      - docker-compose build (building the images)
+      - docker compose up
+
 ## Heroku Integration - [Web Application Preview](https://dental-application.herokuapp.com/)
 
 ## GitHub Pages Link: [Web Application Preview](https://pavelescuvictor.github.io/DentalApplication/)

@@ -243,13 +243,13 @@ export const orderTypeEntryManagerSlice = createSlice({
   },
 });
 
-export const orderManagerReducer = orderTypeEntryManagerSlice.reducer;
+export const orderTypeEntryManagerReducer = orderTypeEntryManagerSlice.reducer;
 
-export const orderManagerActions = {
+export const orderTypeEntryManagerActions = {
   ...orderTypeEntryManagerSlice.actions,
 };
 
-export const orderManagerAsyncThunk = {
+export const orderTypeEntryManagerAsyncThunk = {
   requestOrderTypeEntryColors,
   requestOrderTypeEntryStatus,
   requestOrderTypeEntries,

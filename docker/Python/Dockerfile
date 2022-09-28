@@ -60,9 +60,14 @@ COPY dentalapp-backend/requirements.txt /dentalapp/
 RUN pip install -r dentalapp/requirements.txt
 
 COPY dentalapp-backend/dentalapp/ /dentalapp
+COPY docker/Python/Backend_setup.sh /Backend_setup.sh
 WORKDIR /dentalapp
 
 EXPOSE 8000
 
-CMD ["python", "dentalapp-backend/dentalapp/manage.py", "migrate"]
-CMD ["python", "dentalapp-backend/dentalapp/manage.py", "runserver", "0.0.0.0:8000"]
+# CMD ["python3", "dentalapp-backend/dentalapp/manage.py", "makemigrations"]
+# CMD ["python3", "dentalapp-backend/dentalapp/manage.py", "migrate"]
+CMD ["python3", "dentalapp-backend/dentalapp/manage.py", "runserver", "0.0.0.0:8000"]
+# CMD ["chmod u+r+x", "./docker/Python/Backend_setup_v2.sh"]
+# RUN chmod +x /Backend_setup.sh
+# RUN /Backend_setup.sh

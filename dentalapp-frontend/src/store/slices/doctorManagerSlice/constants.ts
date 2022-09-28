@@ -12,6 +12,9 @@ export const initialStateDoctorManager: DoctorManagerState = {
   selectedDoctor: null,
   hasSelectedDoctor: false,
   selectedDashboardTab: DoctorsDashboardTabs.LIST,
+  selectedDoctorDetails: null,
+  hasErrorLoadingSelectedDoctorDetails: false,
+  isLoadingSelectedDoctorDetails: false,
 };
 
 export const DOCTOR_MANAGER_KEY = 'doctorManager';

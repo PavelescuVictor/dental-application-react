@@ -32,6 +32,7 @@ const GlobalAlertLoader = () => {
     <StyledGlobalAlertLoader
       className={`${alertType ? alertTypesClasses[alertType] : alertTypesClasses.DEFAULT}`}
       onClick={handleOnClickEvent}
+      key={alertMessage}
     >
       <FontAwesomeIcon className="hide-button" icon={faX} />
       {renderAlert()}

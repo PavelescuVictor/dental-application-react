@@ -5,7 +5,9 @@ import {
   getSelectedDoctor,
 } from 'store/slices/doctorManagerSlice/doctorManagerSelectors';
 import { alertManagerActions } from 'store/slices/alertManagerSlice/alertManager';
+import { ALERT_DEFAULT_TIME } from 'store/slices/alertManagerSlice/constants';
 import { AlertTypes } from 'store/slices/alertManagerSlice/models';
+import { doctorManagerActions } from 'store/slices/doctorManagerSlice/doctorManager';
 import { withAccessControl } from 'hocs';
 import { RouteAccessTypes } from 'routes/models';
 import { useAppDispatch } from 'store/store';
@@ -21,18 +23,52 @@ const DoctorsDetails = () => {
 
   useEffect(() => {
     if (selectedDoctorId) {
-      const alert = {
-        alertMessage: 'Loaded details successfully',
-        alertType: AlertTypes.SUCCESS,
-      };
-      dispatch(alertManagerActions.setAlertData(alert));
-      setShowDetails(true);
+      try {
+        dispatch(doctorManagerAsyncThunk.requestSelectedDoctorDetails());
+        const alert = {
+          alertMessage: 'Loaded details successfully',
+          alertType: AlertTypes.SUCCESS,
+        };
+        dispatch(alertManagerActions.clearHideInterval());
+        dispatch(alertManagerActions.setAlertData(alert));
+        dispatch(
+          alertManagerActions.setHideInterval({
+            hideIntervalId: setTimeout(() => {
+              dispatch(alertManagerActions.resetAlert());
+            }, ALERT_DEFAULT_TIME),
+          })
+        );
+        setShowDetails(true);
+      } catch (error: any) {
+        const alert = {
+          alertMessage: 'Error while loading doctors data',
+          alertType: AlertTypes.ERROR,
+        };
+        dispatch(alertManagerActions.clearHideInterval());
+        dispatch(alertManagerActions.setAlertData(alert));
+        dispatch(
+          alertManagerActions.setHideInterval({
+            hideIntervalId: setTimeout(() => {
+              dispatch(alertManagerActions.resetAlert());
+            }, ALERT_DEFAULT_TIME),
+          })
+        );
+        setShowDetails(false);
+      }
     } else {
       const alert = {
         alertMessage: 'No doctor selected',
         alertType: AlertTypes.WARNING,
       };
+      dispatch(alertManagerActions.clearHideInterval());
       dispatch(alertManagerActions.setAlertData(alert));
+      dispatch(
+        alertManagerActions.setHideInterval({
+          hideIntervalId: setTimeout(() => {
+            dispatch(alertManagerActions.resetAlert());
+          }, ALERT_DEFAULT_TIME),
+        })
+      );
       setShowDetails(false);
     }
   }, []);

@@ -7,7 +7,7 @@ import { doctorManagerReducer } from './slices/doctorManagerSlice/doctorManager'
 import { patientManagerReducer } from './slices/patientManagerSlice/patientManager';
 import { alertManagerReducer } from './slices/alertManagerSlice/alertManager';
 import { orderManagerReducer } from './slices/orderManagerSlice/orderManager';
-import { orderTypeEntryReducer } from './slices/orderTypeEntrySlice/orderTypeEntryManager';
+import { orderTypeEntryManagerReducer } from './slices/orderTypeEntrySlice/orderTypeEntryManager';
 
 const rootReducer = combineReducers({
   userManager: userManagerReducer,
@@ -17,7 +17,7 @@ const rootReducer = combineReducers({
   patientManager: patientManagerReducer,
   alertManager: alertManagerReducer,
   orderManager: orderManagerReducer,
-  orderTypeEntryManager: orderTypeEntryReducer,
+  orderTypeEntryManager: orderTypeEntryManagerReducer,
 });
 
 export default rootReducer;

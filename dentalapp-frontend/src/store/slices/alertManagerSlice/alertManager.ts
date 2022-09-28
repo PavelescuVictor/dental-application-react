@@ -17,6 +17,27 @@ export const alertManagerSlice = createSlice({
       state.message = action.payload.alertMessage;
       state.isVisible = true;
     },
+    resetAlert(state: AlertManagerState) {
+      state.type = initialStateAlertManager.type;
+      state.message = initialStateAlertManager.message;
+      state.isVisible = initialStateAlertManager.isVisible;
+    },
+    setHideInterval(
+      state: AlertManagerState,
+      action: PayloadAction<{ hideIntervalId: ReturnType<typeof setTimeout> }>
+    ) {
+      state.hideIntervalId = action.payload.hideIntervalId;
+    },
+    clearHideInterval(state: AlertManagerState) {
+      if (state.hideIntervalId) clearTimeout(state.hideIntervalId);
+      state.hideIntervalId = null;
+    },
+    resetHideInterval(
+      state: AlertManagerState,
+      action: PayloadAction<{ hideIntervalId: ReturnType<typeof setTimeout> }>
+    ) {
+      state.hideIntervalId = action.payload.hideIntervalId;
+    },
   },
   extraReducers: {},
 });

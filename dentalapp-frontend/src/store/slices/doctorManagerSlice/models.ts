@@ -23,6 +23,18 @@ export interface Doctor {
   updatedBy: string;
 }
 
+export interface DoctorDetails {
+  id: number;
+  firstName: string;
+  lastName: string;
+  cabinet: number;
+  phone: string;
+  createdAt: string;
+  createdBy: number;
+  updatedAt: string;
+  updatedBy: string;
+}
+
 export interface DoctorManagerState {
   doctors: Doctor[];
   isLoadingDoctors: boolean;
@@ -34,4 +46,7 @@ export interface DoctorManagerState {
   selectedDoctor: number | null;
   hasSelectedDoctor: boolean;
   selectedDashboardTab: DoctorsDashboardTabs;
+  selectedDoctorDetails: DoctorDetails | null;
+  hasErrorLoadingSelectedDoctorDetails: boolean;
+  isLoadingSelectedDoctorDetails: boolean;
 }

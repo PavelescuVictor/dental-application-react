@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
 from django.contrib.auth import views as auth_views
+from django.views.generic import TemplateView
 
 urlpatterns = [
     # Admin URLS
@@ -66,9 +67,21 @@ urlpatterns = [
         name='password_reset_complete',
     ),
 
-    # API URLS
-    path('api/v1/', include('restapi.urls')),
-
     # USERS URLS
     path('users/', include('userauth.urls')),
+
+    # DOCTOR URLS
+    path('api/v1/', include('doctors.urls')),
+
+    # PATIENTS URLS
+    path('api/v1/', include('patients.urls')),
+
+    # DEPARTMENTS URLS
+    path('api/v1/', include('departments.urls')),
+    
+    # ORDERS URLS
+    path('api/v1/', include('orders.urls')),
+
+    # OPENAPI DOCS JSON | OPENAPI DOCS YAML | SWAGGER DOCS
+    path('api/v1/', include('apidocs.urls')),
 ]
