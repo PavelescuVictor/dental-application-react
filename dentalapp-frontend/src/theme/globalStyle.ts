@@ -11,6 +11,7 @@ export const animations = {
   popIn: 'popIn',
   popOut: 'popOut',
   rotate: 'rotate',
+  rotateReverse: 'rotateReverse',
   zoomIn: 'zoomIn',
 };
 
@@ -19,6 +20,7 @@ export const coreGlobalStyle = css`
   body,
   #root {
     height: 100%;
+    overscroll-behavior: none;
   }
   body {
     -moz-osx-font-smoothing: grayscale;
@@ -139,6 +141,12 @@ export const coreGlobalStyle = css`
   @keyframes ${animations.rotate} {
     100% {
       transform: rotate(360deg);
+    }
+  }
+
+  @keyframes ${animations.rotateReverse} {
+    100% {
+      transform: rotate(-360deg);
     }
   }
 `;

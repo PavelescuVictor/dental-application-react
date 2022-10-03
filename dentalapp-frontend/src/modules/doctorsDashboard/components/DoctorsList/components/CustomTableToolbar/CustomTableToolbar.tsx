@@ -25,7 +25,7 @@ const CustomTableToolbar = ({ numSelected }: CustomTableToolbarProps) => (
           Doctors
         </Typography>
       )}
-      {numSelected > 0 ? (
+      {/* {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton>
             <DeleteIcon />
@@ -37,7 +37,7 @@ const CustomTableToolbar = ({ numSelected }: CustomTableToolbarProps) => (
             <FilterListIcon />
           </IconButton>
         </Tooltip>
-      )}
+      )} */}
     </Toolbar>
   </StyledCustomToolbar>
 );

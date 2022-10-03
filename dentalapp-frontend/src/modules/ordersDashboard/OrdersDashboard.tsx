@@ -36,7 +36,7 @@ const OrdersDashboard = (): JSX.Element => {
           </div>
         );
         break;
-      case OnlyAdminOrdersTabsTypes.DETAILS:
+      case AllAccessOrdersTabsTypes.DETAILS:
         contentToRender = (
           <div className="dashboard__details">
             <OrdersDetails />

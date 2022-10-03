@@ -6,7 +6,7 @@ const StyledFooter = styled.div`
       theme: { palette, typography },
     } = props;
     return css`
-      height: 12vh;
+      height: 20vh;
       background: ${palette.secondary};
       position: relative;
       z-index: 10;

@@ -7,15 +7,21 @@ import { initialStateDoctorManager, DOCTOR_MANAGER_KEY } from './constants';
 import {
   DoctorManagerState,
   Doctor,
+  RequestDoctorDetailsPayload,
+  RequestDoctorInfoPayload,
   AddDoctorPayload,
-  EditDoctorPayload,
-  RemoveDoctorPayload,
+  EditDoctorDetailsPayload,
+  EditDoctorInfoPayload,
+  RemoveDoctorDetailsPayload,
+  RemoveDoctorInfoPayload,
+  DoctorDetails,
+  DoctorInfo,
 } from './models';
 
 const requestDoctors = createAsyncThunk('doctorManager/requestDoctors', async (_, thunkAPI) => {
   try {
     const { userToken } = (thunkAPI.getState() as RootState).userManager;
-    const response = doctorManagerAPI.requestDoctors(userToken);
+    const response = await doctorManagerAPI.requestDoctors(userToken);
     return response;
   } catch (error) {
     thunkAPI.dispatch(doctorManagerSlice.actions.resetDoctors());
@@ -26,15 +32,34 @@ const requestDoctors = createAsyncThunk('doctorManager/requestDoctors', async (_
 
 const requestSelectedDoctorDetails = createAsyncThunk(
   'doctorManager/requestSelectedDoctorDetails',
-  async (_, thunkAPI) => {
+  async (requestDoctorDetailsPayload: RequestDoctorDetailsPayload, thunkAPI) => {
     try {
-      console.log('here');
       const { userToken } = (thunkAPI.getState() as RootState).userManager;
-      console.log('here');
-      const response = doctorManagerAPI.requestSelectedDoctorDetails(userToken);
+      const response = await doctorManagerAPI.requestSelectedDoctorDetails(
+        userToken,
+        requestDoctorDetailsPayload
+      );
       return response;
     } catch (error) {
       thunkAPI.dispatch(doctorManagerSlice.actions.resetSelectedDoctorDetails());
+      console.log('Request Selected Doctors Error: ', error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+const requestSelectedDoctorInfo = createAsyncThunk(
+  'doctorManager/requestSelectedDoctorInfo',
+  async (requestSelectedDoctorInfoPayload: RequestDoctorInfoPayload, thunkAPI) => {
+    try {
+      const { userToken } = (thunkAPI.getState() as RootState).userManager;
+      const response = await doctorManagerAPI.requestSelectedDoctorInfo(
+        userToken,
+        requestSelectedDoctorInfoPayload
+      );
+      return response;
+    } catch (error) {
+      thunkAPI.dispatch(doctorManagerSlice.actions.resetSelectedDoctorInfo());
       console.log('Request Selected Doctors Error: ', error);
       return thunkAPI.rejectWithValue(error);
     }
@@ -46,7 +71,7 @@ const addDoctor = createAsyncThunk(
   async (addDoctorPayload: AddDoctorPayload, thunkAPI) => {
     try {
       const { user, userToken } = (thunkAPI.getState() as RootState).userManager;
-      const response = doctorManagerAPI.addDoctor(userToken, addDoctorPayload, user.id);
+      const response = await doctorManagerAPI.addDoctor(userToken, addDoctorPayload, user.id);
       return response;
     } catch (error) {
       console.log('Add Doctor Error: ', error);
@@ -55,29 +80,68 @@ const addDoctor = createAsyncThunk(
   }
 );
 
-const removeDoctor = createAsyncThunk(
-  'doctorManager/removeDoctor',
-  async (removeDoctorPayload: RemoveDoctorPayload, thunkAPI) => {
+const editDoctorDetails = createAsyncThunk(
+  'doctorManager/editDoctorDetails',
+  async (editDoctorDetailsPayload: EditDoctorDetailsPayload, thunkAPI) => {
     try {
-      const { userToken } = (thunkAPI.getState() as RootState).userManager;
-      const response = doctorManagerAPI.removeDoctor(userToken, removeDoctorPayload);
+      const { user, userToken } = (thunkAPI.getState() as RootState).userManager;
+      const response = await doctorManagerAPI.editDoctorDetails(
+        userToken,
+        editDoctorDetailsPayload,
+        user.id
+      );
       return response;
     } catch (error) {
-      console.log('Remove Doctor Error:');
+      console.log('Edit Doctor Details Error: ', error);
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
 
-const editDoctor = createAsyncThunk(
-  'doctorManager/editDoctor',
-  async (editDoctorPayload: EditDoctorPayload, thunkAPI) => {
+const editDoctorInfo = createAsyncThunk(
+  'doctorManager/editDoctorInfo',
+  async (editDoctorInfoPayload: EditDoctorInfoPayload, thunkAPI) => {
     try {
       const { user, userToken } = (thunkAPI.getState() as RootState).userManager;
-      const response = doctorManagerAPI.editDoctor(userToken, editDoctorPayload, user.id);
+      const response = await doctorManagerAPI.editDoctorInfo(
+        userToken,
+        editDoctorInfoPayload,
+        user.id
+      );
       return response;
     } catch (error) {
-      console.log('Edit Doctor Error: ', error);
+      console.log('Edit Doctor Info Error: ', error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+const removeDoctorDetails = createAsyncThunk(
+  'doctorManager/removeDoctorDetails',
+  async (removeDoctorDetailsPayload: RemoveDoctorDetailsPayload, thunkAPI) => {
+    try {
+      const { userToken } = (thunkAPI.getState() as RootState).userManager;
+      const response = await doctorManagerAPI.removeDoctorDetails(
+        userToken,
+        removeDoctorDetailsPayload
+      );
+      return response;
+    } catch (error) {
+      console.log('Remove Doctor Details Error:', error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+const removeDoctorInfo = createAsyncThunk(
+  'doctorManager/removeDoctorInfo',
+  async (removeDoctorInfoPayload: RemoveDoctorInfoPayload, thunkAPI) => {
+    try {
+      const { userToken } = (thunkAPI.getState() as RootState).userManager;
+      const response = await doctorManagerAPI.removeDoctorInfo(userToken, removeDoctorInfoPayload);
+      return response;
+    } catch (error) {
+      console.log('Remove Doctor Info Error:', error);
       return thunkAPI.rejectWithValue(error);
     }
   }
@@ -95,14 +159,18 @@ export const doctorManagerSlice = createSlice({
       state.doctors.push(action.payload);
     },
 
-    removeDoctor(state: DoctorManagerState, action: PayloadAction<number>) {
-      state.doctors = state.doctors.filter((doctor: Doctor) => doctor.id !== action.payload);
-    },
-
-    editDoctor(state: DoctorManagerState, action: PayloadAction<Doctor>) {
+    editDoctorDetails(state: DoctorManagerState, action: PayloadAction<DoctorDetails>) {
       state.doctors = state.doctors.filter((doctor: Doctor) =>
         doctor.id === action.payload.id ? action.payload : doctor
       );
+    },
+
+    editDoctorInfo(state: DoctorManagerState, action: PayloadAction<DoctorInfo>) {
+      state.selectedDoctorInfo = action.payload;
+    },
+
+    removeDoctor(state: DoctorManagerState, action: PayloadAction<number>) {
+      state.doctors = state.doctors.filter((doctor: Doctor) => doctor.id !== action.payload);
     },
 
     resetDoctors(state: DoctorManagerState) {
@@ -111,6 +179,10 @@ export const doctorManagerSlice = createSlice({
 
     resetSelectedDoctorDetails(state: DoctorManagerState) {
       state.selectedDoctorDetails = initialStateDoctorManager.selectedDoctorDetails;
+    },
+
+    resetSelectedDoctorInfo(state: DoctorManagerState) {
+      state.selectedDoctorInfo = initialStateDoctorManager.selectedDoctorInfo;
     },
 
     setFilteredDoctorList(state: DoctorManagerState, action: PayloadAction<Doctor[]>) {
@@ -139,11 +211,17 @@ export const doctorManagerSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Request Doctors
+    /*
+      REQUEST DOCTOR LIST
+    ____________________________________________________________________________________________________
+    */
+
+    // Request Doctor List Pending
     builder.addCase(requestDoctors.pending, (state: DoctorManagerState) => {
       state.isLoadingDoctors = true;
     });
 
+    // Request Doctor List Fullfilled
     builder.addCase(
       requestDoctors.fulfilled,
       (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
@@ -153,6 +231,7 @@ export const doctorManagerSlice = createSlice({
       }
     );
 
+    // Request Doctor List Rejected
     builder.addCase(
       requestDoctors.rejected,
       (state: DoctorManagerState, action: PayloadAction<any>) => {
@@ -161,20 +240,27 @@ export const doctorManagerSlice = createSlice({
       }
     );
 
-    // Request Selected Doctor Details
+    /* 
+      REQUEAT SELECTED DOCTOR DETAILS
+    ____________________________________________________________________________________________________
+    */
+
+    // Request Selected Doctor Details Pending
     builder.addCase(requestSelectedDoctorDetails.pending, (state: DoctorManagerState) => {
       state.isLoadingSelectedDoctorDetails = true;
     });
 
+    // Request Selected Doctor Details Fullfilled
     builder.addCase(
       requestSelectedDoctorDetails.fulfilled,
       (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
-        state.selectedDoctorDetails = payload.data.results;
+        state.selectedDoctorDetails = payload.data;
         state.isLoadingSelectedDoctorDetails = false;
         state.hasErrorLoadingSelectedDoctorDetails = false;
       }
     );
 
+    // Request Selected Doctor Details Rejected
     builder.addCase(
       requestSelectedDoctorDetails.rejected,
       (state: DoctorManagerState, action: PayloadAction<any>) => {
@@ -183,45 +269,135 @@ export const doctorManagerSlice = createSlice({
       }
     );
 
-    // Add Doctor
+    /* 
+      REQUEAT SELECTED DOCTOR INFO
+    ____________________________________________________________________________________________________
+    */
+
+    // Request Selected Doctor Info Pending
+    builder.addCase(requestSelectedDoctorInfo.pending, (state: DoctorManagerState) => {
+      state.isLoadingSelectedDoctorInfo = true;
+    });
+
+    // Request Selected Doctor Info Fullfilled
     builder.addCase(
-      addDoctor.fulfilled,
+      requestSelectedDoctorInfo.fulfilled,
       (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
-        state.doctors.push(payload.data.results);
+        const doctorInfo = payload.data.results[0];
+        state.selectedDoctorInfo = doctorInfo;
+        state.isLoadingSelectedDoctorInfo = false;
+        state.hasErrorLoadingSelectedDoctorInfo = false;
       }
     );
 
+    // Request Selected Doctor Info Rejected
+    builder.addCase(
+      requestSelectedDoctorInfo.rejected,
+      (state: DoctorManagerState, action: PayloadAction<any>) => {
+        state.hasErrorLoadingSelectedDoctorInfo = true;
+        state.isLoadingSelectedDoctorInfo = false;
+      }
+    );
+
+    /*
+      ADD DOCTOR
+    ____________________________________________________________________________________________________
+    */
+
+    // Add Doctor Fullfilled
+    builder.addCase(
+      addDoctor.fulfilled,
+      (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
+        state.doctors.push(payload.data);
+      }
+    );
+
+    // Add Doctor Rejected
     builder.addCase(addDoctor.rejected, (state: DoctorManagerState, action: PayloadAction<any>) => {
       state.hasErrorAddingDoctor = true;
     });
 
-    // Edit Doctor
+    /* 
+      EDIT DOCTOR DETAILS
+    ____________________________________________________________________________________________________
+    */
+
+    // Edit Doctor Details Fullfilled
     builder.addCase(
-      editDoctor.fulfilled,
+      editDoctorDetails.fulfilled,
       (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
         state.doctors.filter((doctor: Doctor) => (doctor.id === payload.id ? payload : doctor));
       }
     );
 
+    // Edit Doctor Details Rejected
     builder.addCase(
-      editDoctor.rejected,
+      editDoctorDetails.rejected,
       (state: DoctorManagerState, action: PayloadAction<any>) => {
-        state.hasErrorEditingDoctor = true;
+        state.hasErrorEditingDoctorDetails = true;
       }
     );
 
-    // Remove Doctor
+    /* 
+      EDIT DOCTOR INFO
+    ____________________________________________________________________________________________________
+    */
+
+    // Edit Doctor Info Fullfilled
     builder.addCase(
-      removeDoctor.fulfilled,
+      editDoctorInfo.fulfilled,
       (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
-        state.doctors = state.doctors.filter((doctor: Doctor) => doctor.id !== payload.doctorId);
+        state.doctors.filter((doctor: Doctor) => (doctor.id === payload.id ? payload : doctor));
       }
     );
 
+    // Edit Doctor Info Rejected
     builder.addCase(
-      removeDoctor.rejected,
+      editDoctorInfo.rejected,
       (state: DoctorManagerState, action: PayloadAction<any>) => {
-        state.hasErrorRemovingDoctor = true;
+        state.hasErrorEditingDoctorInfo = true;
+      }
+    );
+
+    /*
+      REMOVE DOCTOR DETAILS
+    ____________________________________________________________________________________________________
+    */
+
+    // Remove Doctor Details Fullfilled
+    builder.addCase(
+      removeDoctorDetails.fulfilled,
+      (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
+        state.doctors = state.doctors.filter((doctor: Doctor) => doctor.id !== payload.data.id);
+      }
+    );
+
+    // Remove Doctor Info Rejected
+    builder.addCase(
+      removeDoctorDetails.rejected,
+      (state: DoctorManagerState, action: PayloadAction<any>) => {
+        state.hasErrorRemovingDoctorDetails = true;
+      }
+    );
+
+    /*
+      REMOVE DOCTOR INFO
+    ____________________________________________________________________________________________________
+    */
+
+    // Remove Doctor Fullfilled
+    builder.addCase(
+      removeDoctorInfo.fulfilled,
+      (state: DoctorManagerState, { payload }: PayloadAction<any>) => {
+        state.doctors = state.doctors.filter((doctor: Doctor) => doctor.id !== payload.data.id);
+      }
+    );
+
+    // Remove Doctor Rejected
+    builder.addCase(
+      removeDoctorInfo.rejected,
+      (state: DoctorManagerState, action: PayloadAction<any>) => {
+        state.hasErrorRemovingDoctorInfo = true;
       }
     );
   },
@@ -236,7 +412,10 @@ export const doctorManagerActions = {
 export const doctorManagerAsyncThunk = {
   requestDoctors,
   requestSelectedDoctorDetails,
+  requestSelectedDoctorInfo,
   addDoctor,
-  removeDoctor,
-  editDoctor,
+  editDoctorDetails,
+  editDoctorInfo,
+  removeDoctorDetails,
+  removeDoctorInfo,
 };

@@ -8,10 +8,6 @@ const StyledNavbar = styled.div`
     return css`
       height: 8vh;
       width: 100%;
-      position: fixed;
-      top: 0px;
-      left: 0px;
-      z-index: 100;
 
       .navbar__content {
         height: 100%;

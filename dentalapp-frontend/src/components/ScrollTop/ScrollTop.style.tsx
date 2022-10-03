@@ -6,12 +6,8 @@ const StyledScrollTop = styled.div`
       theme: { palette },
     } = props;
     return css`
-      position: fixed;
       width: 50px;
       height: 50px;
-      right: 20px;
-      bottom: 20px;
-      z-index: 100;
 
       .scroll-top-button {
         width: 100%;
@@ -21,7 +17,6 @@ const StyledScrollTop = styled.div`
         justify-content: center;
         align-items: center;
         border-radius: 10px;
-        animation: rotate 0.6s ease-in-out both;
         transition: border-radius 0.2s ease-in-out;
         z-index: 100;
         cursor: pointer;

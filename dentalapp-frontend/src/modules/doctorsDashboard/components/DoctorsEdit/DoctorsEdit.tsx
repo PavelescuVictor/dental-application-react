@@ -1,9 +1,11 @@
+/* eslint-disable max-lines-per-function */
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'store/store';
 import { useState, useEffect } from 'react';
 import { Box, Input, FormControl, InputLabel, FormHelperText } from '@mui/material';
 import { ConfirmationDialog, Button } from 'components';
 import { AlertTypes } from 'store/slices/alertManagerSlice/models';
+import { ALERT_DEFAULT_TIME } from 'store/slices/alertManagerSlice/constants';
 import { withAccessControl } from 'hocs';
 import { RouteAccessTypes } from 'routes/models';
 import {
@@ -11,8 +13,9 @@ import {
   doctorManagerAsyncThunk,
 } from 'store/slices/doctorManagerSlice/doctorManager';
 import {
-  getSelectedDoctorData,
   getSelectedDoctor,
+  getDoctorDetails,
+  getDoctorInfo,
 } from 'store/slices/doctorManagerSlice/doctorManagerSelectors';
 import { alertManagerActions } from 'store/slices/alertManagerSlice/alertManager';
 import { DoctorsDashboardTabs } from 'modules/doctorsDashboard/models';
@@ -21,11 +24,15 @@ import StyledDoctorsEdit from './DoctorsEdit.style';
 interface FormValues {
   firstName: string | undefined | null;
   lastName: string | undefined | null;
+  cabinet: string | undefined | null;
+  phone: string | undefined | null;
 }
 
 const defaultFormValues: FormValues = {
   firstName: '',
   lastName: '',
+  cabinet: '',
+  phone: '',
 };
 
 type ValidationRulesType<Type> = {
@@ -35,43 +42,105 @@ type ValidationRulesType<Type> = {
 const validationRules: ValidationRulesType<FormValues> = {
   firstName: (value: string): string => {
     if (value === '') return 'First name is required';
-    if (!/^([^0-9]*)$/.test(value)) return 'Must not contain numbers';
+    // if (!/^([^0-9]*)$/.test(value)) return 'Must not contain numbers';
     return '';
   },
   lastName: (value: string): string => {
     if (value === '') return 'Last name is required';
     return '';
   },
+  cabinet: (value: string): string => {
+    if (value === '') return 'Cabinet is required';
+    return '';
+  },
+  phone: (value: string): string => {
+    if (value === null) return 'Phone is required';
+    return '';
+  },
 };
 
 const DoctorsEdit = () => {
   const dispatch = useAppDispatch();
-  const doctorData = useSelector(getSelectedDoctorData);
+  const doctorDetails = useSelector(getDoctorDetails);
+  const doctorInfo = useSelector(getDoctorInfo);
   const selectedDoctorId = useSelector(getSelectedDoctor);
   const [formValues, setFormValues] = useState<FormValues>(defaultFormValues);
   const [errors, setError] = useState<FormValues>({
-    firstName: '',
-    lastName: '',
+    firstName: defaultFormValues.firstName,
+    lastName: defaultFormValues.lastName,
+    cabinet: defaultFormValues.cabinet,
+    phone: defaultFormValues.phone,
   });
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [showDetails, setShowDetails] = useState<boolean>(false);
+
+  const handleRequestSelectedDoctorDetails = async () => {
+    await dispatch(doctorManagerAsyncThunk.requestSelectedDoctorDetails({ id: selectedDoctorId }));
+    await dispatch(doctorManagerAsyncThunk.requestSelectedDoctorInfo({ id: selectedDoctorId }));
+    const alert = {
+      alertMessage: 'Loaded details successfully',
+      alertType: AlertTypes.SUCCESS,
+    };
+    dispatch(alertManagerActions.clearHideInterval());
+    dispatch(alertManagerActions.setAlertData(alert));
+    dispatch(
+      alertManagerActions.setHideInterval({
+        hideIntervalId: setTimeout(() => {
+          dispatch(alertManagerActions.resetAlert());
+        }, ALERT_DEFAULT_TIME),
+      })
+    );
+    setShowDetails(true);
+  };
+
+  useEffect(() => {
+    if (showDetails) {
+      setFormValues({
+        firstName: doctorDetails?.firstName,
+        lastName: doctorDetails?.lastName,
+        cabinet: doctorInfo?.cabinet,
+        phone: doctorInfo?.phone,
+      });
+      setShowDetails(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showDetails]);
 
   useEffect(() => {
     if (selectedDoctorId) {
-      const alert = {
-        alertMessage: 'Loaded details successfully',
-        alertType: AlertTypes.SUCCESS,
-      };
-      dispatch(alertManagerActions.setAlertData(alert));
-      setFormValues({ firstName: doctorData?.firstName, lastName: doctorData?.lastName });
-      setShowDetails(true);
+      try {
+        handleRequestSelectedDoctorDetails();
+      } catch {
+        setFormValues(defaultFormValues);
+        const alert = {
+          alertMessage: 'There was an error loading details for the selected doctor!',
+          alertType: AlertTypes.ERROR,
+        };
+        dispatch(alertManagerActions.clearHideInterval());
+        dispatch(alertManagerActions.setAlertData(alert));
+        dispatch(
+          alertManagerActions.setHideInterval({
+            hideIntervalId: setTimeout(() => {
+              dispatch(alertManagerActions.resetAlert());
+            }, ALERT_DEFAULT_TIME),
+          })
+        );
+        setShowDetails(false);
+      }
     } else {
+      setFormValues(defaultFormValues);
       const alert = {
         alertMessage: 'No doctor selected',
         alertType: AlertTypes.WARNING,
       };
+      dispatch(alertManagerActions.clearHideInterval());
       dispatch(alertManagerActions.setAlertData(alert));
-      setFormValues(defaultFormValues);
+      dispatch(
+        alertManagerActions.setHideInterval({
+          hideIntervalId: setTimeout(() => {
+            dispatch(alertManagerActions.resetAlert());
+          }, ALERT_DEFAULT_TIME),
+        })
+      );
       setShowDetails(false);
     }
   }, []);
@@ -117,8 +186,19 @@ const DoctorsEdit = () => {
     if (!checkIsValid()) return;
     try {
       await dispatch(
-        doctorManagerAsyncThunk.editDoctor({ ...formValues, id: selectedDoctorId })
+        doctorManagerAsyncThunk.editDoctorDetails({
+          firstName: formValues.firstName,
+          lastName: formValues.lastName,
+          id: selectedDoctorId,
+        })
       ).unwrap();
+      await dispatch(
+        doctorManagerAsyncThunk.editDoctorInfo({
+          cabinet: formValues.cabinet,
+          phone: formValues.phone,
+          id: selectedDoctorId,
+        })
+      );
       const alert = {
         alertMessage: 'Edited doctor successfully',
         alertType: AlertTypes.SUCCESS,
@@ -134,23 +214,21 @@ const DoctorsEdit = () => {
     }
   };
 
-  const handleReset = () => {
-    setFormValues({ firstName: doctorData?.firstName, lastName: doctorData?.lastName });
+  const handleReset = (event) => {
+    event.preventDefault();
+    setFormValues({
+      firstName: doctorDetails?.firstName,
+      lastName: doctorDetails?.lastName,
+      cabinet: doctorInfo ? doctorInfo.cabinet : defaultFormValues.cabinet,
+      phone: doctorInfo ? doctorInfo.phone : defaultFormValues.phone,
+    });
   };
 
   return (
     <StyledDoctorsEdit>
       {showDetails && (
         <div className="form__wrapper">
-          <Box
-            component="form"
-            onSubmit={(event: any) => {
-              event?.preventDefault();
-              if (!checkIsValid()) return;
-              setIsDialogOpen(true);
-            }}
-            onReset={handleReset}
-          >
+          <Box component="form" onReset={handleReset} onSubmit={handleSubmit}>
             <FormControl variant="standard" error={!!errors?.firstName}>
               <InputLabel htmlFor="fist-name-input" className="form-labels">
                 First Name
@@ -184,6 +262,40 @@ const DoctorsEdit = () => {
               <FormHelperText className="form-error-text"> {errors?.lastName} </FormHelperText>
             </FormControl>
 
+            <FormControl variant="standard" error={!!errors?.cabinet}>
+              <InputLabel htmlFor="cabinet-input" className="form-labels">
+                Cabinet
+              </InputLabel>
+              <Input
+                id="cabinet-input"
+                type="text"
+                value={formValues.cabinet}
+                onChange={handleInputChange}
+                autoComplete="cabinet"
+                name="cabinet"
+                fullWidth
+                disabled={!doctorInfo}
+              />
+              <FormHelperText className="form-error-text"> {errors?.lastName} </FormHelperText>
+            </FormControl>
+
+            <FormControl variant="standard" error={!!errors?.phone}>
+              <InputLabel htmlFor="phone-input" className="form-labels">
+                Phone
+              </InputLabel>
+              <Input
+                id="phone-input"
+                type="text"
+                value={formValues.phone}
+                onChange={handleInputChange}
+                autoComplete="phone"
+                name="phone"
+                fullWidth
+                disabled={!doctorInfo}
+              />
+              <FormHelperText className="form-error-text"> {errors?.lastName} </FormHelperText>
+            </FormControl>
+
             <div className="form__buttons">
               <Button
                 type="submit"
@@ -198,11 +310,9 @@ const DoctorsEdit = () => {
               </Button>
             </div>
             <ConfirmationDialog
-              isOpen={isDialogOpen}
               title="Add Confirmation"
               body="Are you sure you want to add a doctor"
               confirmLabel="Confirm"
-              onCancel={() => setIsDialogOpen(false)}
               onConfirm={handleSubmit}
             />
           </Box>

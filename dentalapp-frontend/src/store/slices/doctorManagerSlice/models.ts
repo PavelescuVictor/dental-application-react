@@ -5,13 +5,25 @@ export type AddDoctorPayload = {
   lastName: string;
 };
 
-export type EditDoctorPayload = {
+export type EditDoctorDetailsPayload = {
   id: string;
   firstName?: string;
   lastName?: string;
 };
 
-export type RemoveDoctorPayload = { id: string };
+export type EditDoctorInfoPayload = {
+  id: string;
+  cabinet?: string;
+  phone?: string;
+};
+
+export type RemoveDoctorDetailsPayload = { id: string };
+
+export type RemoveDoctorInfoPayload = { id: string };
+
+export type RequestDoctorDetailsPayload = { id: string };
+
+export type RequestDoctorInfoPayload = { id: string };
 
 export interface Doctor {
   id: number;
@@ -19,34 +31,59 @@ export interface Doctor {
   lastName: string;
   createdAt: string;
   createdBy: number;
+  createdByName: string;
   updatedAt: string;
   updatedBy: string;
+  updatedByName: string;
 }
 
 export interface DoctorDetails {
   id: number;
   firstName: string;
   lastName: string;
+  createdAt: string;
+  createdBy: number;
+  createdByName: string;
+  updatedAt: string;
+  updatedBy: string;
+  updatedByName: string;
+}
+
+export interface DoctorInfo {
+  id: number;
+  doctorId: number;
   cabinet: number;
   phone: string;
   createdAt: string;
   createdBy: number;
+  createdByName: string;
   updatedAt: string;
   updatedBy: string;
+  updatedByName: string;
 }
 
 export interface DoctorManagerState {
   doctors: Doctor[];
-  isLoadingDoctors: boolean;
-  hasErrorLoadingDoctors: boolean;
-  hasErrorAddingDoctor: boolean;
-  hasErrorEditingDoctor: boolean;
-  hasErrorRemovingDoctor: boolean;
   filteredDoctors: Doctor[];
   selectedDoctor: number | null;
   hasSelectedDoctor: boolean;
   selectedDashboardTab: DoctorsDashboardTabs;
   selectedDoctorDetails: DoctorDetails | null;
-  hasErrorLoadingSelectedDoctorDetails: boolean;
+  selectedDoctorInfo: DoctorInfo | null;
+  isLoadingDoctors: boolean;
   isLoadingSelectedDoctorDetails: boolean;
+  isLoadingSelectedDoctorInfo: boolean;
+  isAddingDoctor: boolean;
+  isEditingDoctorDetails: boolean;
+  isEditingDoctorInfo: boolean;
+  isRemovingDoctorDetails: boolean;
+  isRemovingDoctorInfo: boolean;
+  hasErrorLoadingDoctors: boolean;
+  hasErrorAddingDoctor: boolean;
+  hasErrorEditingDoctorDetails: boolean;
+  hasErrorEditingDoctorInfo: boolean;
+  hasErrorRemovingDoctorDetails: boolean;
+  hasErrorRemovingDoctorInfo: boolean;
+  hasErrorLoadingSelectedDoctorDetails: boolean;
+  hasErrorLoadingSelectedDoctorInfo: boolean;
 }

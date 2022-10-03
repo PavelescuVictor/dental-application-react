@@ -5,10 +5,10 @@ import { faList, faUser, faEdit, faPlus } from '@fortawesome/free-solid-svg-icon
 import { Button } from 'components';
 import { getSelectedDashboardTab } from 'store/slices/doctorManagerSlice/doctorManagerSelectors';
 import { RouteAccessTypes } from 'routes/models';
+import { withAccessGuard } from 'hocs/index';
 import StyledDoctorsNavbar from './DoctorsNavbar.style';
 import { DoctorsDashboardTabs } from '../../models';
 import { DoctorsNavbarProps } from './models';
-import { withAccessControlNavbarTab } from 'hocs/index';
 
 const DoctorsNavbar = ({ handleTabChange }: DoctorsNavbarProps) => {
   const currentTab = useSelector(getSelectedDashboardTab);
@@ -66,7 +66,8 @@ const DoctorsNavbar = ({ handleTabChange }: DoctorsNavbarProps) => {
           </li>
         </Button>
       );
-      return withAccessControlNavbarTab(tabItem, navbarItems[navbarItemKey].accessLevel);
+      const Tab = withAccessGuard(tabItem, navbarItems[navbarItemKey].accessLevel);
+      return <Tab key={navbarItemKey} />;
     });
   };
 

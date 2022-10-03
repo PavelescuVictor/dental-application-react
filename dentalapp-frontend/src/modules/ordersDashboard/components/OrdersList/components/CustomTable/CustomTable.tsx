@@ -39,7 +39,6 @@ const CustomTable = ({ className, dense = true, data }: CustomTableProps) => {
   const [selected, setSelected] = useState<readonly number[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE_OPTIONS[0]);
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const selectedOrder = useSelector(getSelectedOrder);
 
   const handleRequestSort = (_: React.MouseEvent<unknown>, property: keyof Data) => {
@@ -216,7 +215,6 @@ const CustomTable = ({ className, dense = true, data }: CustomTableProps) => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
           <ConfirmationDialog
-            isOpen={isDialogOpen}
             title="Add Confirmation"
             body="Are you sure you want to remove this order"
             confirmLabel="Confirm"

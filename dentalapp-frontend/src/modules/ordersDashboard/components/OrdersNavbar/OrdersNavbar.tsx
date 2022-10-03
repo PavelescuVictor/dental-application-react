@@ -76,7 +76,7 @@ const OrdersNavbar = ({ handleTabChange }: OrdersNavbarProps) => {
       AllAccessOrdersTabsTypes.LIST,
       AllAccessOrdersTabsTypes.DETAILS,
     ];
-    const onlyAdminNavbarItemKeys = [OnlyAdminOrdersTabsTypes.ADD, OnlyAdminOrdersTabsTypes.EDIT];
+    const onlyAdminNavbarItemKeys = [OnlyAdminOrdersTabsTypes.EDIT, OnlyAdminOrdersTabsTypes.ADD];
 
     const routesKeys = [...allAccessNavbarItemKeys, ...onlyAdminNavbarItemKeys];
 

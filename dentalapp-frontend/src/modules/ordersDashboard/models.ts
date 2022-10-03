@@ -11,7 +11,7 @@ export type AllAccessOrdersTabsDisplayNames = {
 
 export const allAccessOrdersDisplayNames: AllAccessOrdersTabsDisplayNames = {
   [AllAccessOrdersTabsTypes.LIST]: 'List',
-  [AllAccessOrdersTabsTypes.DETAILS]: 'DETAILS',
+  [AllAccessOrdersTabsTypes.DETAILS]: 'Details',
 };
 
 // Only Admin Tabs

@@ -7,6 +7,7 @@ import { ViewType } from 'components/Page/models';
 import { useAppDispatch } from 'store/store';
 import { doctorManagerAsyncThunk } from 'store/slices/doctorManagerSlice/doctorManager';
 import { alertManagerActions } from 'store/slices/alertManagerSlice/alertManager';
+import { ALERT_DEFAULT_TIME } from 'store/slices/alertManagerSlice/constants';
 import { AlertTypes } from 'store/slices/alertManagerSlice/models';
 import { withAccessControl } from 'hocs';
 import { routePaths, RouteAccessTypes } from 'routes/models';
@@ -31,7 +32,7 @@ type ValidationRulesType<Type> = {
 const validationRules: ValidationRulesType<FormValues> = {
   firstName: (value: string): string => {
     if (value === '') return 'First name is required';
-    if (!/^([^0-9]*)$/.test(value)) return 'Must not contain numbers';
+    // if (!/^([^0-9]*)$/.test(value)) return 'Must not contain numbers';
     return '';
   },
   lastName: (value: string): string => {
@@ -47,12 +48,12 @@ const AddDoctor = (): JSX.Element => {
     firstName: '',
     lastName: '',
   });
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(alertManagerActions.resetAlert());
+    dispatch(alertManagerActions.clearHideInterval());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -101,18 +102,35 @@ const AddDoctor = (): JSX.Element => {
         alertMessage: 'Added doctor successfully',
         alertType: AlertTypes.SUCCESS,
       };
+      dispatch(alertManagerActions.clearHideInterval());
       dispatch(alertManagerActions.setAlertData(alert));
+      dispatch(
+        alertManagerActions.setHideInterval({
+          hideIntervalId: setTimeout(() => {
+            dispatch(alertManagerActions.resetAlert());
+          }, ALERT_DEFAULT_TIME),
+        })
+      );
       navigate(routePaths.DOCTORS);
     } catch (rejectedValueOrSerializedError) {
       const alert = {
         alertMessage: 'Added doctor unsuccessfully',
         alertType: AlertTypes.ERROR,
       };
+      dispatch(alertManagerActions.clearHideInterval());
       dispatch(alertManagerActions.setAlertData(alert));
+      dispatch(
+        alertManagerActions.setHideInterval({
+          hideIntervalId: setTimeout(() => {
+            dispatch(alertManagerActions.resetAlert());
+          }, ALERT_DEFAULT_TIME),
+        })
+      );
     }
   };
 
-  const handleReset = () => {
+  const handleReset = (event) => {
+    event.preventDefault();
     setFormValues(defaultFormValues);
   };
 
@@ -132,15 +150,7 @@ const AddDoctor = (): JSX.Element => {
               <Typography component="p" className="form-title">
                 Add doctor
               </Typography>
-              <Box
-                component="form"
-                onSubmit={(event: any) => {
-                  event?.preventDefault();
-                  if (!checkIsValid()) return;
-                  setIsDialogOpen(true);
-                }}
-                onReset={handleReset}
-              >
+              <Box component="form" onSubmit={handleSubmit} onReset={handleReset}>
                 <FormControl variant="standard" error={!!errors?.firstName}>
                   <InputLabel htmlFor="fist-name-input" className="form-labels">
                     First Name
@@ -190,11 +200,9 @@ const AddDoctor = (): JSX.Element => {
                   </Button>
                 </div>
                 <ConfirmationDialog
-                  isOpen={isDialogOpen}
                   title="Add Confirmation"
                   body="Are you sure you want to add a doctor"
                   confirmLabel="Confirm"
-                  onCancel={() => setIsDialogOpen(false)}
                   onConfirm={handleSubmit}
                 />
               </Box>

@@ -21,10 +21,12 @@ import {
 } from 'store/slices/doctorManagerSlice/doctorManager';
 import { getSelectedDoctor } from 'store/slices/doctorManagerSlice/doctorManagerSelectors';
 import { alertManagerActions } from 'store/slices/alertManagerSlice/alertManager';
+import { ALERT_DEFAULT_TIME } from 'store/slices/alertManagerSlice/constants';
 import { AlertTypes } from 'store/slices/alertManagerSlice/models';
 import { ConfirmationDialog } from 'components';
 import { DoctorsDashboardTabs } from 'modules/doctorsDashboard/models';
 import { useSelector } from 'react-redux';
+import { dialogManagerActions } from 'store/slices/dialogManagerSlice/dialogManager';
 import StyledCustomTable from './CustomTable.style';
 import { Data, Order, CustomTableProps } from './models';
 import { ROWS_PER_PAGE_OPTIONS } from './constants';
@@ -39,8 +41,7 @@ const CustomTable = ({ className, dense = true, data }: CustomTableProps) => {
   const [selected, setSelected] = useState<readonly number[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE_OPTIONS[0]);
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const selectedDoctor = useSelector(getSelectedDoctor);
+  const selectedDoctorId = useSelector(getSelectedDoctor);
 
   const handleRequestSort = (_: React.MouseEvent<unknown>, property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -75,7 +76,6 @@ const CustomTable = ({ className, dense = true, data }: CustomTableProps) => {
     }
 
     setSelected(newSelected);
-    console.log(selectedIndex);
     if (selectedIndex === -1) dispatch(doctorManagerActions.setSelectedDoctor(id));
     else dispatch(doctorManagerActions.resetSelectedDoctor());
   };
@@ -102,30 +102,49 @@ const CustomTable = ({ className, dense = true, data }: CustomTableProps) => {
   const handleRemoveDoctor = async (event: any, id: number) => {
     event.stopPropagation();
     dispatch(doctorManagerActions.setSelectedDoctor(id));
-    setIsDialogOpen(true);
+    dispatch(dialogManagerActions.setVisibility(true));
   };
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     try {
-      await dispatch(doctorManagerAsyncThunk.removeDoctor({ id: selectedDoctor })).unwrap();
+      await dispatch(doctorManagerAsyncThunk.removeDoctorDetails({ id: selectedDoctorId }));
+      await dispatch(doctorManagerAsyncThunk.removeDoctorInfo({ id: selectedDoctorId }));
+      dispatch(dialogManagerActions.setVisibility(false));
       const alert = {
         alertMessage: 'Remove doctor successfully',
         alertType: AlertTypes.SUCCESS,
       };
+      dispatch(alertManagerActions.clearHideInterval());
       dispatch(alertManagerActions.setAlertData(alert));
+      dispatch(
+        alertManagerActions.setHideInterval({
+          hideIntervalId: setTimeout(() => {
+            dispatch(alertManagerActions.resetAlert());
+          }, ALERT_DEFAULT_TIME),
+        })
+      );
     } catch (rejectedValueOrSerializedError) {
       const alert = {
         alertMessage: 'Remove doctor unsuccessfully',
         alertType: AlertTypes.ERROR,
       };
+      dispatch(alertManagerActions.clearHideInterval());
       dispatch(alertManagerActions.setAlertData(alert));
+      dispatch(
+        alertManagerActions.setHideInterval({
+          hideIntervalId: setTimeout(() => {
+            dispatch(alertManagerActions.resetAlert());
+          }, ALERT_DEFAULT_TIME),
+        })
+      );
     }
   };
 
-  const handleCancel = () => {
-    setIsDialogOpen(false);
+  const handleCancel = (event: any) => {
+    event.stopPropagation();
     dispatch(doctorManagerActions.resetSelectedDoctor());
+    dispatch(dialogManagerActions.setVisibility(false));
   };
 
   return (
@@ -161,7 +180,7 @@ const CustomTable = ({ className, dense = true, data }: CustomTableProps) => {
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={data.name}
+                        key={row.id}
                         selected={isItemSelected}
                       >
                         <TableCell padding="checkbox">
@@ -214,7 +233,6 @@ const CustomTable = ({ className, dense = true, data }: CustomTableProps) => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
           <ConfirmationDialog
-            isOpen={isDialogOpen}
             title="Add Confirmation"
             body="Are you sure you want to remove this doctor"
             confirmLabel="Confirm"

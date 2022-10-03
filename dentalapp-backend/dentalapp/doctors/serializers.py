@@ -50,18 +50,17 @@ class DoctorDetailsSerializer(serializers.ModelSerializer):
         source='updatedBy.__str__', read_only=True)
 
     # Validating data
-    doctorId = serializers.CharField(validators=[UniqueValidator(queryset=DoctorDetails.objects.all(),
+    doctor = serializers.CharField(validators=[UniqueValidator(queryset=DoctorDetails.objects.all(),
         message="Cannot add doctor details. Reason: Doctor details for this doctor already exists."
     )])
-    
 
     class Meta:
         model = DoctorDetails
         fields = [
-            'id', 'doctorId', 'cabinet', 'phone', 'createdBy', 'createdByName', 'updatedBy', 'updatedByName', 'createdAt', 'updatedAt'
+            'id', 'doctor', 'cabinet', 'phone', 'createdBy', 'createdByName', 'updatedBy', 'updatedByName', 'createdAt', 'updatedAt'
         ]
         extra_kwargs = {
-            'doctorId': {
+            'doctor': {
                 'read_only': False,
                 'required': True,
             },

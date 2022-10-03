@@ -7,13 +7,14 @@ import {
   Divider,
   Box,
 } from '@material-ui/core';
+import { useSelector } from 'react-redux';
 import { Button } from 'components';
+import { selectIsDialogVisible } from 'store/slices/dialogManagerSlice/dialogManagerSelectors';
 import StyledConfirmationDialog from './ConfirmationDialog.style';
 
 interface ConfirmationBoxProps {
   onConfirm: (event: any) => void;
-  onCancel: (event: any) => void;
-  isOpen: boolean;
+  onCancel?: (event: any) => void;
   title: string;
   body: string;
   confirmLabel: string;
@@ -22,11 +23,12 @@ interface ConfirmationBoxProps {
 const ConfirmationBox = ({
   onConfirm,
   onCancel,
-  isOpen,
   title,
   body,
   confirmLabel,
 }: ConfirmationBoxProps): JSX.Element => {
+  const isDialogOpen = useSelector(selectIsDialogVisible);
+
   const handleConfirm = (event: any) => {
     if (onConfirm) onConfirm(event);
   };
@@ -34,7 +36,7 @@ const ConfirmationBox = ({
   return (
     <StyledConfirmationDialog className="confirmation-dialog">
       <Dialog
-        open={isOpen}
+        open={isDialogOpen}
         onClose={onCancel}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"

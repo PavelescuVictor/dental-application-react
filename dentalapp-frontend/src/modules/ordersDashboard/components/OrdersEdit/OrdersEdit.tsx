@@ -9,7 +9,7 @@ import { withAccessControl } from 'hocs';
 import { routePaths, RouteAccessTypes } from 'routes/models';
 import { doctorManagerAsyncThunk } from 'store/slices/doctorManagerSlice/doctorManager';
 import {
-  getSelectedDoctorData,
+  getDoctorDetails,
   getSelectedDoctor,
 } from 'store/slices/doctorManagerSlice/doctorManagerSelectors';
 import { alertManagerActions } from 'store/slices/alertManagerSlice/alertManager';
@@ -43,14 +43,14 @@ const validationRules: ValidationRulesType<FormValues> = {
 
 const OrdersEdit = () => {
   const dispatch = useAppDispatch();
-  const doctorData = useSelector(getSelectedDoctorData);
+  const doctorData = useSelector(getDoctorDetails);
   const selectedDoctorId = useSelector(getSelectedDoctor);
   const [formValues, setFormValues] = useState<FormValues>(defaultFormValues);
   const [errors, setError] = useState<FormValues>({
     firstName: '',
     lastName: '',
   });
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
   const navigate = useNavigate();
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
@@ -194,11 +194,9 @@ const OrdersEdit = () => {
               </Button>
             </div>
             <ConfirmationDialog
-              isOpen={isDialogOpen}
               title="Add Confirmation"
               body="Are you sure you want to add a doctor"
               confirmLabel="Confirm"
-              onCancel={() => setIsDialogOpen(false)}
               onConfirm={handleSubmit}
             />
           </Box>

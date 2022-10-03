@@ -5,7 +5,7 @@ from .views import DoctorViewSet, DoctorDetailsViewSet
 
 router = routers.DefaultRouter()
 router.register('doctors', DoctorViewSet, basename="Doctors")
-router.register('doctors_details', DoctorDetailsViewSet, basename="Doctors Details")
+router.register('doctor_details', DoctorDetailsViewSet, basename="Doctors Details")
 
 urlpatterns = [
     path('', include(router.urls)),

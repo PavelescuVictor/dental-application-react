@@ -52,6 +52,10 @@ const StyledDoctorsDetails = styled.div`
             &:first-child {
               border-right: 6px solid #e7e9ee;
             }
+
+            &.no-data {
+              color: #e7e9ee;
+            }
           }
 
           &:first-child {

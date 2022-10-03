@@ -1,17 +1,23 @@
 import {
   requestDoctors,
   requestSelectedDoctorDetails,
+  requestSelectedDoctorInfo,
   addDoctor,
-  removeDoctor,
-  editDoctor,
+  removeDoctorDetails,
+  removeDoctorInfo,
+  editDoctorDetails,
+  editDoctorInfo,
 } from './doctorManagerApi';
 
 const doctorManagerAPI = {
   requestDoctors,
   requestSelectedDoctorDetails,
+  requestSelectedDoctorInfo,
   addDoctor,
-  removeDoctor,
-  editDoctor,
+  removeDoctorDetails,
+  removeDoctorInfo,
+  editDoctorDetails,
+  editDoctorInfo,
 };
 
 export default doctorManagerAPI;
