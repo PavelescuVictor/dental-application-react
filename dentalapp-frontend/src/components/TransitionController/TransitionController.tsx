@@ -3,7 +3,6 @@ import { TransitionControllerProps, transitions, Transition } from './models';
 
 const TransitionController = (props: TransitionControllerProps): JSX.Element => {
   const [isReadyToUnmount, setIsReadyToUnmount] = useState<boolean>(false);
-  const transition = useMemo<Transition>(() => transitions[props.transitionType], []);
   const TransitionStyle = transitions[props.transitionType].transitionStyle;
   const transitionWrapperRef = useRef<HTMLDivElement>(null);
 
@@ -42,7 +41,7 @@ const TransitionController = (props: TransitionControllerProps): JSX.Element => 
     applyTransitionMount();
     setTimeout(() => {
       if (props.onTransitionMountEnd) props.onTransitionMountEnd();
-    }, transitions[props.transitionType].mountTime);
+    }, transitions[props.transitionType].mountTransitionDuration);
   };
 
   const handleTransitionUnmount = () => {
@@ -51,7 +50,7 @@ const TransitionController = (props: TransitionControllerProps): JSX.Element => 
     setTimeout(() => {
       if (props.onTransitionUnmountEnd) props.onTransitionUnmountEnd();
       props.onReadyToUnmountChild();
-    }, transitions[props.transitionType].unmountTime);
+    }, transitions[props.transitionType].unmountTransitionDuration);
   };
 
   useEffect(() => {

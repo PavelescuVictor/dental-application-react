@@ -12,6 +12,17 @@ export const initialStateOrderManager: OrderManagerState = {
   selectedOrder: null,
   hasSelectedOrder: false,
   selectedDashboardTab: AllAccessOrdersTabsTypes.LIST,
+  orderTypeEntries: [],
+  orderTypeEntryColors: [],
+  orderTypeEntryStatus: [],
+  isLoadingOrderTypeEntries: false,
+  hasErrorLoadingOrderTypeEntries: false,
+  hasErrorAddingOrderTypeEntry: false,
+  hasErrorEditingOrderTypeEntry: false,
+  hasErrorRemovingOrderTypeEntry: false,
+  filteredOrderTypeEntries: [],
+  selectedOrderTypeEntry: null,
+  hasSelectedOrderTypeEntry: false,
 };
 
 export const ORDER_MANAGER_KEY = 'orderManager';

@@ -19,6 +19,29 @@ export const getSelectedOrderData = ({ orderManager }: RootState) =>
 export const getHasSelectedOrder = ({ orderManager }: RootState) => orderManager.hasSelectedOrder;
 export const getSelectedDashboardTab = ({ orderManager }: RootState) =>
   orderManager.selectedDashboardTab;
+export const selectOrderTypeEntries = ({ orderTypeEntryManager }: RootState) =>
+  orderTypeEntryManager.orderTypeEntries;
+export const selectIsLoadingOrderTypeEntries = ({ orderTypeEntryManager }: RootState) =>
+  orderTypeEntryManager.isLoadingOrderTypeEntries;
+export const selectHasErrorLoadingOrderTypeEntries = ({ orderTypeEntryManager }: RootState) =>
+  orderTypeEntryManager.hasErrorLoadingOrderTypeEntries;
+export const selectHasErrorAddingOrderTypeEntry = ({ orderTypeEntryManager }: RootState) =>
+  orderTypeEntryManager.hasErrorAddingOrderTypeEntry;
+export const selectHasErrorEditingOrderTypeEntry = ({ orderTypeEntryManager }: RootState) =>
+  orderTypeEntryManager.hasErrorEditingOrderTypeEntry;
+export const selectHasErrorRemovingOrderTypeEntry = ({ orderTypeEntryManager }: RootState) =>
+  orderTypeEntryManager.hasErrorRemovingOrder;
+export const selectFilteredOrderTypeEntries = ({ orderTypeEntryManager }: RootState) =>
+  orderTypeEntryManager.filteredOrderTypeEntries;
+export const getSelectedOrderTypeEntry = ({ orderTypeEntryManager }: RootState) =>
+  orderTypeEntryManager.selectedOrderTypeEntry;
+export const getSelectedOrderData = ({ orderTypeEntryManager }: RootState) =>
+  orderTypeEntryManager.orderTypeEntries.find(
+    (orderTypeEntry: OrderTypeEntry) =>
+      orderTypeEntry.id === orderTypeEntryManager.selectedOrderTypeEntry
+  );
+export const getHasSelectedOrderTypeEntry = ({ orderTypeEntryManager }: RootState) =>
+  orderTypeEntryManager.hasSelectedOrderTypeEntry;
 
 const OrderManagerSelectors = {
   getOrderManagerState: (rootState: RootState): OrderManagerState => rootState[ORDER_MANAGER_KEY],

@@ -89,7 +89,7 @@ const onlyAdminRoutes: RouteItemType[] = [
     exact: true,
     path: routePaths.ADMIN_PAGE,
     routeType: OnlyAdminRoutesTypes.ADMIN_PAGE,
-    component: lazy(() => import('modules/admin')),
+    component: lazy(() => import('modules/adminDashboard')),
   },
   {
     exact: true,

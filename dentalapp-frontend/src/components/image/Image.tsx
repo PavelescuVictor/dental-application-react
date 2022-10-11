@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import styled from 'styled-components';
+import StyledImage from './Image.style';
 
 interface ImageProps {
   imageUrl?: string;
@@ -8,8 +8,6 @@ interface ImageProps {
   focusKey?: string | null;
   loading?: 'lazy' | 'eager';
 }
-
-const StyledImage = styled.img<ImageProps>``;
 
 const Image = memo(({ imageUrl, className, alt, focusKey, loading }: ImageProps) => (
   <StyledImage

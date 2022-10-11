@@ -22,7 +22,7 @@ const CustomTableToolbar = ({ numSelected }: CustomTableToolbarProps) => (
         </Typography>
       ) : (
         <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
-          Doctors
+          Orders
         </Typography>
       )}
       {numSelected > 0 ? (

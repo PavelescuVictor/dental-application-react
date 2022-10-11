@@ -19,11 +19,11 @@ export const transitionTypes = {
   SCROLL_TOP: 'SCROLL_TOP',
   NAVBAR: 'NAVBAR',
   LOADER: 'LOADER',
-};
+} as const;
 
-export interface Transitions {
-  [key: TransitionType]: Transition;
-}
+export type Transitions = {
+  [key in TransitionType]: Transition;
+};
 
 export const transitions: Transitions = {
   [transitionTypes.ALERT]: {
